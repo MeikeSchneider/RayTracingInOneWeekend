@@ -33,16 +33,21 @@ class camera {
     }
 
   private:
-    int    image_height;   // Rendered image height
+    int    image_height;         // Rendered image height
     double pixel_samples_scale;  // Color scale factor for a sum of pixel samples
-    point3 center;         // Camera center
-    point3 pixel00_loc;    // Location of pixel 0, 0
-    vec3   pixel_delta_u;  // Offset to pixel to the right
-    vec3   pixel_delta_v;  // Offset to pixel below
+    point3 center;               // Camera center
+    point3 pixel00_loc;          // Location of pixel 0, 0
+    vec3   pixel_delta_u;        // Offset to pixel to the right
+    vec3   pixel_delta_v;        // Offset to pixel below
 
     void initialize() {
         image_height = int(image_width / aspect_ratio);
-        image_height = (image_height < 1) ? 1 : image_height;
+        // image_height = (image_height < 1) ? 1 : image_height;
+        if (image_height < 1) {
+            image_height = 1; 
+        } else {
+            image_height = image_height; 
+        }
 
         pixel_samples_scale = 1.0 / samples_per_pixel;
 

@@ -29,9 +29,10 @@ class vec3 {
         e[0] += v.e[0];
         e[1] += v.e[1];
         e[2] += v.e[2];
-        return *this; // after adding v to self return self
+        return *this; // after adding v to self, return self
     }
 
+    // mutliply self with a scalar t
     vec3& operator*=(double t) {
         e[0] *= t;
         e[1] *= t;
@@ -39,6 +40,7 @@ class vec3 {
         return *this;
     }
 
+    // same with divide (just use inverted multiply)
     vec3& operator/=(double t) {
         return *this *= 1/t;
     }
@@ -87,18 +89,21 @@ inline vec3 operator/(const vec3& v, double t) {
     return (1/t) * v;
 }
 
+// dot product of two vectors u, v
 inline double dot(const vec3& u, const vec3& v) {
     return u.e[0] * v.e[0]
          + u.e[1] * v.e[1]
          + u.e[2] * v.e[2];
 }
 
+// cross product of two vectors u, v
 inline vec3 cross(const vec3& u, const vec3& v) {
     return vec3(u.e[1] * v.e[2] - u.e[2] * v.e[1],
                 u.e[2] * v.e[0] - u.e[0] * v.e[2],
                 u.e[0] * v.e[1] - u.e[1] * v.e[0]);
 }
 
+// normalize lenght of vector
 inline vec3 unit_vector(const vec3& v) {
     return v / v.length();
 }
