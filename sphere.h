@@ -12,7 +12,7 @@ class sphere : public hittable {
         vec3 oc = center - r.origin();
         auto a = r.direction().length_squared();
         auto h = dot(r.direction(), oc);
-        auto c = oc.length_squared() - radius*radius;
+        auto c = oc.length_squared() - radius * radius;
 
         auto discriminant = h * h - a * c;
         if (discriminant < 0)

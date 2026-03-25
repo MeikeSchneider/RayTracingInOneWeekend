@@ -10,7 +10,7 @@ class vec3 {
     double e[3];
 
     // empty constructor: sets all values to 0
-    vec3() : e{0,0,0} {}
+    vec3() : e{0, 0, 0} {}
     // write e0, e1, e2 into array e
     vec3(double e0, double e1, double e2) : e{e0, e1, e2} {}
 
