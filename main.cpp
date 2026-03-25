@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-bool hit_sphere(const point3& center, double radius, const ray& r) {
+double hit_sphere(const point3& center, double radius, const ray& r) {
     // takes a sphere (defined by its center and radius) and a ray
     // checks, if they intersect by solving quadratic equation
     vec3 oc = center - r.origin();
@@ -12,18 +12,27 @@ bool hit_sphere(const point3& center, double radius, const ray& r) {
     auto b = -2.0 * dot(r.direction(), oc); // b = −2d * (C − Q)
     auto c = dot(oc, oc) - radius * radius; // c = (C − Q) * (C − Q) − r^2
     auto discriminant = b * b - 4 * a * c; // quadratic equation
-    return (discriminant >= 0);
+    
+    if (discriminant < 0) {
+        return -1.0;
+    } else {
+        return (-b - std::sqrt(discriminant) ) / (2.0*a);
+    }
 }
+
 
 color ray_color(const ray& r) {
-    // place sphere at (0,0,-1) with r = 0,5. If sphere intersects with way, color it red.
-    if (hit_sphere(point3(0, 0, -1), 0.5, r)) 
-        return color(1, 0, 0); // red
-
+    auto t = hit_sphere(point3(0,0,-1), 0.5, r);
+    if (t > 0.0) {
+        vec3 N = unit_vector(r.at(t) - vec3(0,0,-1));
+        return 0.5 * color(N.x()+1, N.y()+1, N.z()+1);
+    }
     vec3 unit_direction = unit_vector(r.direction());
-    auto a = 0.5 * (unit_direction.y() + 1.0);
-    return (1.0 - a) * color(1.0, 1.0, 1.0) + a * color(0.5, 0.7, 1.0);
+    auto a = 0.5*(unit_direction.y() + 1.0);
+    return (1.0-a)*color(1.0, 1.0, 1.0) + a*color(0.5, 0.7, 1.0);
 }
+
+
 
 int main() {
     auto aspect_ratio = 16.0 / 9.0; // chosen just because it's common like this
