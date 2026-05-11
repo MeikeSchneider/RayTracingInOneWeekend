@@ -4,7 +4,7 @@
 #include "vec3.h"
 #include "interval.h"
 
-using color = vec3;
+using color = vec3;  // color is just a vec3 with rgb values
 
 void write_color(std::ostream& out, const color& pixel_color) {
     auto r = pixel_color.x();

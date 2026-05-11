@@ -8,19 +8,27 @@
 
 class camera {
     public:
-    double aspect_ratio = 1.0;  // Ratio of image width over height
-    int    image_width  = 100;  // Rendered image width in pixel count
-    int    samples_per_pixel = 10;   // Count of random samples for each pixel
+    double aspect_ratio = 1.0;      // Ratio of image width over height
+    int    image_width  = 100;      // Rendered image width in pixel count
+    int    samples_per_pixel = 10;  // Count of random samples for each pixel
 
     void render(const hittable& world) {
+        /*
+        renders the image by writing directly into a file
+        pixels are written in rows left to right, top to bottom
+        */
         initialize();
 
+        /*  P3
+            400 225
+            255     */
         std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 
         for (int j = 0; j < image_height; j++) {
+            // for every remaining line of the image, print remaining line number into the terminal
             std::clog << "\rScanlines remaining: " << (image_height - j) << ' ' << std::flush;
             for (int i = 0; i < image_width; i++) {
-                color pixel_color(0,0,0);
+                color pixel_color(0, 0, 0);
                 for (int sample = 0; sample < samples_per_pixel; sample++) {
                     ray r = get_ray(i, j);
                     pixel_color += ray_color(r, world);
@@ -28,7 +36,7 @@ class camera {
                 write_color(std::cout, pixel_samples_scale * pixel_color);
             }
         }
-
+        // after the whole image is rendered, print "Done" into terminal
         std::clog << "\rDone.                 \n";
     }
 

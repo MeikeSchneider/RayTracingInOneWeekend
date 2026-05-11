@@ -12,8 +12,11 @@ class vec3 {
     // empty constructor: sets all values to 0
     // if no vector values are given at making of the object, put 0s into vector
     vec3() : e{0, 0, 0} {}
-    // write e0, e1, e2 into array e
-    // if values for the vector are given, these are put into the vector by constructor
+    /*
+    write e0, e1, e2 into array e
+    if values for the vector are given, these are put into the vector by constructor
+    uses carthesian coordinates
+    */
     vec3(double e0, double e1, double e2) : e{e0, e1, e2} {}
 
     // functions to return corresponding number in array
