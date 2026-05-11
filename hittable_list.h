@@ -21,11 +21,17 @@ using statement: tells the compiler that we'll be getting shared_ptr and make_sh
 from the std library, so we don't need to prefix these with std:: every time we reference them. 
 */
 using std::make_shared;
-using std::shared_ptr;
+using std::shared_ptr;  // does memory management automatically so we don't need to worry about it
 
 class hittable_list : public hittable {
   public:
+    // basically a list containing shared pointers pointing to different hittables
     std::vector<shared_ptr<hittable>> objects;
+    /*
+    zB erzeuge Kugel. Möchte mehrere Sachen damit machen, also zeigen mehrere pointer drauf
+    shared pointer hat counter um sich zu merken, wie viele pointer drauf zeigen.
+    Wenn nichts mehr drauf zeigt weiß der shared pointer, dass das Objekt gelöscht werden soll.
+    */
 
     hittable_list() {}
     hittable_list(shared_ptr<hittable> object) { add(object); }
@@ -43,6 +49,7 @@ class hittable_list : public hittable {
         
         for (const auto& object : objects) {
             if (object->hit(r, interval(ray_t.min, closest_so_far), temp_rec)) {
+                // -> is dereferencing
                 hit_anything = true;
                 closest_so_far = temp_rec.t;
                 rec = temp_rec;
