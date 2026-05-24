@@ -1,10 +1,20 @@
 #include "rtweekend.h"
-
 #include "camera.h"
 #include "hittable.h"
 #include "hittable_list.h"
 #include "sphere.h"
 
+#include "vec4.h"
+
+void test() {
+    std::clog << "test\n";
+    vec3 u = vec3(1, 2, 3);
+    vec4 u_converted = vec3_to_vec4(u);
+    vec4 v = vec4(3, 6, 9, 2);
+    vec3 v_converted = vec4_to_vec3(v);
+    std::clog << "u: " << u << ", u_converted: " << u_converted << std::endl;
+    std::clog << "v: " << v << ", v_converted: " << v_converted << std::endl;
+}
 
 int main() {
     hittable_list world;  // make list of hittable objects
@@ -18,6 +28,8 @@ int main() {
     cam.aspect_ratio = 16.0 / 9.0;
     cam.image_width  = 400;
     cam.samples_per_pixel = 100;
+
+    test();
 
     cam.render(world);
 }

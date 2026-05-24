@@ -12,13 +12,13 @@ class camera {
     int    image_width  = 100;      // Rendered image width in pixel count
     int    samples_per_pixel = 10;  // Count of random samples for each pixel
 
-    void render(const hittable& world) {
-        /*
+
+    /*
         renders the image by writing directly into a file
         pixels are written in rows left to right, top to bottom
-        */
+    */
+    void render(const hittable& world) {
         initialize();
-
         /*  P3
             400 225
             255     */
