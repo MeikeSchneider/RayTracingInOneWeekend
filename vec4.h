@@ -64,7 +64,7 @@ class vec4 {
     double length_squared() const {
         return e[0]*e[0] + e[1]*e[1] + e[2]*e[2] + e[3]*e[3];
     }
-};
+};  // end of class
 
 // point3 is just an alias for vec4, but useful for geometric clarity in the code.
 using point4 = vec4;

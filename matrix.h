@@ -39,7 +39,16 @@ class matrix {
                              a[4],  a[5],  a[5],  a[7],
                              a[8],  a[9],  a[10], a[11],
                              a[12], a[13], a[14], a[15]} {}
-};
+    
+    // define transformation matrices
+    static matrix Translation(vec3 v) {
+        return matrix(1, 0, 0, v.x(), 
+                      0, 1, 0, v.y(), 
+                      0, 0, 1, v.z(), 
+                      0, 0, 0, 1);
+    }
+
+};  // end of class
 
 // define operators
 // matrix * scalar t
@@ -123,6 +132,58 @@ inline std::ostream& operator<<(std::ostream& out, const matrix& m) {
            ' ' << m.e[4]  << ' ' << m.e[5]  << ' ' << m.e[6]  << ' ' << m.e[7]  <<
            ' ' << m.e[8]  << ' ' << m.e[9]  << ' ' << m.e[10] << ' ' << m.e[11] <<
            ' ' << m.e[12] << ' ' << m.e[13] << ' ' << m.e[14] << ' ' << m.e[15];
+}
+
+inline matrix invert(const matrix& m) {
+/*
+Calculate inverse of an affine 4x4 matrix
+m =
+m.e[0]  m.e[1]  m.e[2]  m.e[3]
+m.e[4]  m.e[5]  m.e[6]  m.e[7]                       
+m.e[8]  m.e[9]  m.e[10] m.e[11]
+m.e[12] m.e[13] m.e[14] m.e[15]
+
+inverse(m) = A^-1   A^-1 * vektor
+                0      1
+A^-1 = 1/det(A) * adj(A)
+*/
+// calculate determinant of 3x3 matrix A
+// det_A calculation tested, works.
+float det_A = (m.e[0] * (m.e[5] * m.e[10] - m.e[6] * m.e[9]) -
+               m.e[1] * (m.e[4] * m.e[10] - m.e[6] * m.e[8]) + 
+               m.e[2] * (m.e[4] * m.e[9]  - m.e[5] * m.e[8]));
+// calculate matrix A^-1
+/*
+a   b   c
+d   e   f
+g   h   i
+A^-1 tested, works. 
+*/
+float a = 1 / det_A * (m.e[5] * m.e[10] - m.e[6] * m.e[9]);
+float b = 1 / det_A * (m.e[2] * m.e[9]  - m.e[1] * m.e[10]);
+float c = 1 / det_A * (m.e[1] * m.e[6]  - m.e[2] * m.e[5]);
+float d = 1 / det_A * (m.e[6] * m.e[8]  - m.e[4] * m.e[10]);
+float e = 1 / det_A * (m.e[0] * m.e[10] - m.e[2] * m.e[8]);
+float f = 1 / det_A * (m.e[2] * m.e[4]  - m.e[0] * m.e[6]);
+float g = 1 / det_A * (m.e[4] * m.e[9]  - m.e[5] * m.e[8]);
+float h = 1 / det_A * (m.e[1] * m.e[8]  - m.e[0] * m.e[9]);
+float i = 1 / det_A * (m.e[0] * m.e[5]  - m.e[1] * m.e[4]);
+
+// calculate A^-1 * vektor
+// vektor = x, y, z
+float x = m.e[3];
+float y = m.e[7];
+float z = m.e[11];
+
+float u = (-1) * (a * x + b * y + c * z);
+float v = (-1) * (d * x + e * y + f * z);
+float w = (-1) * (g * x + h * y + i * z);
+
+matrix A = matrix(a, b, c, u,
+                  d, e, f, v, 
+                  g, h, i, w,
+                  0, 0, 0, 1); 
+return A;
 }
 
 #endif

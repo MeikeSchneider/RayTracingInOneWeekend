@@ -24,31 +24,37 @@ void test() {
     // matrix n = matrix() * 5;
     // std::clog << "n: " << n << std::endl;
     // test that constructor with values in it works
-    matrix o = matrix(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
-    std::clog << "o: " << o << std::endl;
-    o = o * 2;
-    std::clog << "o*2: " << o << std::endl;
+    // matrix o = matrix(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
+    // std::clog << "o: " << o << std::endl;
+    // o = o * 2;
+    // std::clog << "o*2: " << o << std::endl;
     // test that constructor with values in a list works
-    double lst[16] = {3, 3, 3, 6, 6, 6, 9, 9, 9, 10, 11, 12, 13, 14, 15, 16};
-    matrix p = matrix(lst);
-    std::clog << "p: " << p << std::endl;
+    // double lst[16] = {3, 3, 3, 6, 6, 6, 9, 9, 9, 10, 11, 12, 13, 14, 15, 16};
+    // matrix p = matrix(lst);
+    // std::clog << "p: " << p << std::endl;
     // dividing by a scalar should work too
-    p = p / 3;
-    std::clog << "3*p: " << p << std::endl;
+    // p = p / 3;
+    // std::clog << "3*p: " << p << std::endl;
     // matrix multiplication
-    matrix A = matrix(1, 2, 0, 1, 3, 0, 1, 2, 1, 1, 2, 0, 0, 2, 1, 1);
-    matrix B = matrix(1, 0, 2, 1, 2, 1, 0, 1, 0, 2, 1, 2, 1, 0, 1, 0);
-    matrix C = A * B;
-    std::clog << "A*B: " << C << std::endl;
+    // matrix A = matrix(1, 2, 0, 1, 3, 0, 1, 2, 1, 1, 2, 0, 0, 2, 1, 1);
+    // matrix B = matrix(1, 0, 2, 1, 2, 1, 0, 1, 0, 2, 1, 2, 1, 0, 1, 0);
+    // matrix C = A * B;
+    // std::clog << "A*B: " << C << std::endl;
     // result: 6, 2, 3, 3, 5, 2, 8, 5, 3, 5, 4, 6, 5, 4, 3, 4
     // printed:6  2  3  3  5  2  9  5  3  5  4  6  5  4  2  4
-    matrix D = matrix(1, 1, 1, 1, 
-                      2, 2, 2, 2, 
-                      3, 3, 3, 3, 
-                      4, 4, 4, 4);
-    vec4 v = vec4(1, 2, 3, 4);
-    vec4 w = D * v;
-    std::clog << "D*v: " << w << std::endl;
+    // matrix D = matrix(1, 1, 1, 1, 
+    //                   2, 2, 2, 2, 
+    //                   3, 3, 3, 3, 
+    //                   4, 4, 4, 4);
+    // vec4 v = vec4(1, 2, 3, 4);
+    // vec4 w = D * v;
+    // std::clog << "D*v: " << w << std::endl;
+    // Tests for invert(matrix)
+    matrix A = matrix(1, 0, 0, 5,
+                      0, 1, 0, -3,
+                      0, 0, 1, 8, 
+                      0, 0, 0, 1);
+    std::clog << "det(A)= " << invert(A) << std::endl;
 }
 
 int main() {
