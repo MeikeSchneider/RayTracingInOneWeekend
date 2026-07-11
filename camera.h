@@ -59,6 +59,10 @@ class camera {
 
         pixel_samples_scale = 1.0 / samples_per_pixel;
 
+        // camera center at 0,0,0. 
+        // y-axis goes up, x-axis goes to right, negative z-axis goes into viewing direction
+        // is called "right-handed coordinates"
+
         center = point3(0, 0, 0);
 
         // Determine viewport dimensions.

@@ -42,19 +42,28 @@ void test() {
     std::clog << "A*B: " << C << std::endl;
     // result: 6, 2, 3, 3, 5, 2, 8, 5, 3, 5, 4, 6, 5, 4, 3, 4
     // printed:6  2  3  3  5  2  9  5  3  5  4  6  5  4  2  4
+    matrix D = matrix(1, 1, 1, 1, 
+                      2, 2, 2, 2, 
+                      3, 3, 3, 3, 
+                      4, 4, 4, 4);
+    vec4 v = vec4(1, 2, 3, 4);
+    vec4 w = D * v;
+    std::clog << "D*v: " << w << std::endl;
 }
 
 int main() {
     hittable_list world;  // make list of hittable objects
 
     // add sphere and "floor" to hittables
-    // point3(1, 1, 1) * matric = new point 
-    world.add(make_shared<sphere>(point3(0, 0, -1), 0.5));       // make the sphere
+    point3 sphere_center = point3(0, 0, -1);
+    float radius = 0.5;
+    world.add(make_shared<sphere>(sphere_center, radius));
+    // world.add(make_shared<sphere>(point3(0, 0, -1), 0.5));       // make the sphere
     world.add(make_shared<sphere>(point3(0, -100.5, -1), 100));  // make green "floor" which is a sphere
 
     camera cam;  // create camera object
 
-    cam.aspect_ratio = 16.0 / 9.0;
+    cam.aspect_ratio = 16.0 / 9.0;  // image width to image height is 16:9
     cam.image_width  = 400;
     cam.samples_per_pixel = 100;  // anti-aliasing?
 

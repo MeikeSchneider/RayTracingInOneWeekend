@@ -1,16 +1,13 @@
-// TODO: class matrix -> for moving sphere
-// array of 16
-// constructiors
-// Matrix * matrix (* operator überladen)
-// Matrix * vev4 (* operator überladen)
-// vec * matrix not exist/useful
-// Zb 5 * matrix (* überladen)
-// zB matrix * 5 (same but seperate)
+/*
+class matrix -> for moving objects
+matrix = array of 16
+// TODO: move sphere with matrix mult.
 
-// later: (for moving camera)
+// TODO later: (for moving camera)
 // transponieren
 // determinante (google it, not full laplace)
 // invertieren (1/det * transponierte matrix)
+*/
 
 #ifndef MATRIX_H
 #define MATRIX_H
@@ -66,6 +63,26 @@ inline matrix operator/(const matrix& m, double t){
     return (1/t) * m;
 }
 
+// Matrix * vec4
+// takes matrix, vec4, gives vec4
+inline vec4 operator*(const matrix& m, vec4 v) {
+    return vec4(m.e[0] * v.e[0] + m.e[1] * v.e[1] + m.e[2] * v.e[2] + m.e[3] * v.e[3],
+                m.e[4] * v.e[0] + m.e[5] * v.e[1] + m.e[6] * v.e[2] + m.e[7] * v.e[3],
+                m.e[8] * v.e[0] + m.e[9] * v.e[1] + m.e[10]* v.e[2] + m.e[11]* v.e[3],
+                m.e[12]* v.e[0] + m.e[13]* v.e[1] + m.e[14]* v.e[2] + m.e[15]* v.e[3]);
+}
+/*
+                                        v.e[0]
+                                        v.e[1]
+                                        v.e[2]
+                                        v.e[3]
+
+m.e[0]  m.e[1]  m.e[2]  m.e[3]           
+m.e[4]  m.e[5]  m.e[6]  m.e[7]                       
+m.e[8]  m.e[9]  m.e[10] m.e[11]         
+m.e[12] m.e[13] m.e[14] m.e[15]         
+*/
+
 // matrix * matrix
 inline matrix operator*(const matrix& m, const matrix& n) {
     return matrix(m.e[0]  * n.e[0] + m.e[1]  * n.e[4] + m.e[2]  * n.e[8]  + m.e[3]  * n.e[12],
@@ -93,7 +110,7 @@ inline matrix operator*(const matrix& m, const matrix& n) {
                                     n.e[8]  n.e[9]  n.e[10] n.e[11]
                                     n.e[12] n.e[13] n.e[14] n.e[15]
     m.e[0]  m.e[1]  m.e[2]  m.e[3]
-    m.e[4]  m.e[5]  m.e[6]  m.e[7]                       x
+    m.e[4]  m.e[5]  m.e[6]  m.e[7]                       
     m.e[8]  m.e[9]  m.e[10] m.e[11]
     m.e[12] m.e[13] m.e[14] m.e[15]
     */
@@ -107,6 +124,5 @@ inline std::ostream& operator<<(std::ostream& out, const matrix& m) {
            ' ' << m.e[8]  << ' ' << m.e[9]  << ' ' << m.e[10] << ' ' << m.e[11] <<
            ' ' << m.e[12] << ' ' << m.e[13] << ' ' << m.e[14] << ' ' << m.e[15];
 }
-
 
 #endif
