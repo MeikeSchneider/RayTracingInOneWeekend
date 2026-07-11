@@ -50,11 +50,23 @@ void test() {
     // vec4 w = D * v;
     // std::clog << "D*v: " << w << std::endl;
     // Tests for invert(matrix)
+    /*
     matrix A = matrix(1, 0, 0, 5,
                       0, 1, 0, -3,
                       0, 0, 1, 8, 
                       0, 0, 0, 1);
     std::clog << "det(A)= " << invert(A) << std::endl;
+    */
+    // test for Translation matrix
+    std::clog << "Translation matrix = " << matrix::Translation(vec3(1, 2, 3)) << std::endl;
+    // test for Scale matrix
+    std::clog << "Scale matrix = " << matrix::Scale(vec3(1, 2, 3)) << std::endl;
+    // test for XRotation matrix
+    std::clog << "XRotation matrix = " << matrix::XRotation(90) << std::endl;
+    // test for YRotation matrix
+    std::clog << "YRotation matrix = " << matrix::YRotation(90) << std::endl;
+    // test for ZRotation matrix
+    std::clog << "ZRotation matrix = " << matrix::ZRotation(90) << std::endl;
 }
 
 int main() {

@@ -48,6 +48,34 @@ class matrix {
                       0, 0, 0, 1);
     }
 
+    static matrix Scale(vec3 v) {
+        return matrix(v.x(), 0,     0,     0, 
+                      0,     v.y(), 0,     0, 
+                      0,     0,     v.z(), 0, 
+                      0,     0,     0,     1);
+    }
+
+    static matrix XRotation(float angle) {
+        return matrix(1, 0,           0,            0, 
+                      0, cos(angle), -sin(angle),   0, 
+                      0, sin(angle),  cos(angle),   0, 
+                      0, 0,           0,            1);
+    }
+
+    static matrix YRotation(float angle) {
+        return matrix(cos(angle),  0, sin(angle), 0,
+                      0,           1, 0,          0, 
+                      -sin(angle), 0, cos(angle), 0, 
+                      0,           0, 0,          1);
+    }
+
+    static matrix ZRotation(float angle) {
+        return matrix(cos(angle), -sin(angle), 0, 0,
+                      sin(angle),  cos(angle), 0, 0, 
+                      0,           0,          1, 0, 
+                      0,           0,          0, 1);
+    }
+
 };  // end of class
 
 // define operators
