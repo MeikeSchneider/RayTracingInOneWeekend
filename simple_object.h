@@ -32,7 +32,7 @@ class simple_object {
         0, 0, 0, 1} {} 
     */
 
-    // constructor, with values given
+    // constructor, with all values given
     simple_object(vec3 translation, vec3 scale, float xRotation, float yRotation, float zRotation) {
         /*
         generates the matrices out of the values given, combines them into one matrix.
@@ -42,13 +42,27 @@ class simple_object {
         */
         matrix rotation = matrix::ZRotation(zRotation) * (matrix::YRotation(yRotation) * matrix::XRotation(xRotation));
         obj_to_world_matrix = matrix::Scale(scale) * (rotation *  matrix::Translation(translation));
-   }
+    } 
+    
+    simple_object(vec3 translation, vec3 scale) {
+        // constructor with translation and scale given
+        obj_to_world_matrix = matrix::Scale(scale) *  matrix::Translation(translation);
+    }
+    
+    
+    void move(const vec3& position) {
+        // takes in a position that should be added to the current position, makes a translation matrix out of it
+        // and multiplies that with the matrix
+        obj_to_world_matrix = matrix::Translation(position) * obj_to_world_matrix;
+    }
+
+    void place(const vec3& position) {
+        // takes in a pos where the object should be moved to, overwrites the enties of the matrix
+        obj_to_world_matrix.e[3]  = position.x();
+        obj_to_world_matrix.e[7]  = position.y();
+        obj_to_world_matrix.e[11] = position.z();
+    }
 
 };
-
-// how to print out a simple object using iostream
-inline std::ostream& operator<<(std::ostream& out, const simple_object m) {
-    return out << m.obj_to_world_matrix;
-}
 
 #endif

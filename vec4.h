@@ -20,7 +20,7 @@ class vec4 {
     if values for the vector are given, these are put into the vector by constructor
     uses carthesian coordinates
     */
-    vec4(double e0, double e1, double e2, double e3) : e{e0, e1, e2, e3} {}  // this like this, this but it inputs a list
+    vec4(double e0, double e1, double e2, double e3) : e{e0, e1, e2, e3} {} 
 
     // functions to return corresponding number in array
     double x() const { return e[0]; }

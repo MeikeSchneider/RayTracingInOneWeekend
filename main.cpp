@@ -74,11 +74,21 @@ void test_matrix_invert() {
 
 void test_simple_obj() {
     // test the empty constructor
-    simple_object obj = simple_object();
-    std::clog << "object_1 = " << obj << std::endl;
+    simple_object obj_1 = simple_object();
+    std::clog << "object_1 = " << obj_1.obj_to_world_matrix << std::endl;
     // test constructor with scale and translation given
     simple_object obj_2 = simple_object(vec3(1, 2, 3), vec3(2, 2, 2), 0, 0, 0);
-    std::clog << "object_2 = " << obj_2 << std::endl;
+    std::clog << "object_2 = " << obj_2.obj_to_world_matrix << std::endl;
+    // test the move function
+    obj_1.move(vec3(3, 4, 5));
+    std::clog << "object_1 = " << obj_1.obj_to_world_matrix << std::endl;
+    obj_2.move(vec3(-1, -2, -3));
+    std::clog << "object_2 = " << obj_2.obj_to_world_matrix << std::endl;
+    // test the place function
+    obj_1.place(vec3(3, 4, 5));
+    std::clog << "object_1 = " << obj_1.obj_to_world_matrix << std::endl;
+    obj_2.place(vec3(-1, -2, -3));
+    std::clog << "object_2 = " << obj_2.obj_to_world_matrix << std::endl;
 }
 
 int main() {
