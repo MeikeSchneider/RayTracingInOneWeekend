@@ -5,7 +5,7 @@
 #include "vec3.h"
 #include "ray.h"
 #include "interval.h"
-#include "camera.h"
+#include "camera_old.h"
 
 class simple_object {
     /*
@@ -16,60 +16,58 @@ class simple_object {
     */
 
     public:
-    // Matrix always represents the transformation from object space to world space
-    matrix obj_to_world_matrix;
+        // Matrix always represents the transformation from object space to world space
+        matrix obj_to_world_matrix;
     
-    // empty constructor: identity matrix
-    simple_object() {obj_to_world_matrix = matrix(
-        1, 0, 0, 0,
-        0, 1, 0, 0, 
-        0, 0, 1, 0,
-        0, 0, 0, 1);
-    }
-    /*
-    Identisch zu dem leeren Konstruktor drüber, aber in Schreibweise vom Tutorial
-    simple_object() : obj_to_world_matrix{
-        1, 0, 0, 0,
-        0, 1, 0, 0, 
-        0, 0, 1, 0,
-        0, 0, 0, 1} {} 
-    */
+        // empty constructor: identity matrix
+        simple_object() {obj_to_world_matrix = matrix(
+            1, 0, 0, 0,
+            0, 1, 0, 0, 
+            0, 0, 1, 0,
+            0, 0, 0, 1);
+        }
+        /*   Identisch zu dem leeren Konstruktor drüber, aber in Schreibweise vom Tutorial
+        simple_object() : obj_to_world_matrix{
+            1, 0, 0, 0,
+            0, 1, 0, 0, 
+            0, 0, 1, 0,
+            0, 0, 0, 1} {} */
 
-    // constructor, with all values given
-    simple_object(vec3 translation, vec3 scale, float xRotation, float yRotation, float zRotation) {
-        /*
-        generates the matrices out of the values given, combines them into one matrix.
-        order of operation:
-        rotation: z * y * x
-        everyting: scale * rotation * translation
-        */
-        matrix rotation = matrix::ZRotation(zRotation) * (matrix::YRotation(yRotation) * matrix::XRotation(xRotation));
-        obj_to_world_matrix = matrix::Scale(scale) * (rotation *  matrix::Translation(translation));
-    } 
-    
-    simple_object(vec3 translation, vec3 scale) {
-        // constructor with translation and scale given
-        obj_to_world_matrix = matrix::Scale(scale) *  matrix::Translation(translation);
-    }
-    
-    
-    void move(const vec3& position) {
-        // takes in a position that should be added to the current position, makes a translation matrix out of it
-        // and multiplies that with the matrix
-        obj_to_world_matrix = matrix::Translation(position) * obj_to_world_matrix;
-    }
+        // constructor, with all values given
+        simple_object(vec3 translation, vec3 scale, float xRotation, float yRotation, float zRotation) {
+            /*
+            generates the matrices out of the values given, combines them into one matrix.
+            order of operation:
+            rotation: z * y * x
+            everyting: scale * rotation * translation
+            */
+            matrix rotation = matrix::ZRotation(zRotation) * (matrix::YRotation(yRotation) * matrix::XRotation(xRotation));
+            obj_to_world_matrix = matrix::Scale(scale) * (rotation *  matrix::Translation(translation));
+        } 
+        
+        simple_object(vec3 translation, vec3 scale) {
+            // constructor with translation and scale given
+            obj_to_world_matrix = matrix::Scale(scale) *  matrix::Translation(translation);
+        }
+        
+        
+        void move(const vec3& position) {
+            // takes in a position that should be added to the current position, makes a translation matrix out of it
+            // and multiplies that with the matrix
+            obj_to_world_matrix = matrix::Translation(position) * obj_to_world_matrix;
+        }
 
-    void place(const vec3& position) {
-        // takes in a pos where the object should be moved to, overwrites the enties of the matrix
-        obj_to_world_matrix.e[3]  = position.x();
-        obj_to_world_matrix.e[7]  = position.y();
-        obj_to_world_matrix.e[11] = position.z();
-    }
+        void place(const vec3& position) {
+            // takes in a pos where the object should be moved to, overwrites the enties of the matrix
+            obj_to_world_matrix.e[3]  = position.x();
+            obj_to_world_matrix.e[7]  = position.y();
+            obj_to_world_matrix.e[11] = position.z();
+        }
 
-    // hit function. Place holder for overwriting later, sets an object as not hittable as a standard
-    // wenn es später Probleme gibt wegen inclusion kreis (camera includes simple object which includes camera)
-    // just give hit function the world_to_obj matrix instead of the whole camera 
-    bool hit(const ray& r, interval ray_t, camera& cam, hit_record& rec) const { return false; }
+        // hit function. Place holder for overwriting later, sets an object as not hittable as a standard
+        // wenn es später Probleme gibt wegen inclusion kreis (camera includes simple object which includes camera)
+        // just give hit function the world_to_obj matrix instead of the whole camera 
+        bool hit(const ray& r, interval ray_t, camera_old& cam, hit_record& rec) const { return false; }
 
 };
 

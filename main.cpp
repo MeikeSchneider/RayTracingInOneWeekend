@@ -1,4 +1,5 @@
 #include "rtweekend.h"
+#include "camera_old.h"
 #include "camera.h"
 #include "hittable.h"
 #include "hittable_list.h"
@@ -7,6 +8,7 @@
 #include "vec4.h"
 #include "matrix.h"
 #include "simple_object.h"
+#include "sphere.h"
 
 void test_vectors() {
     // tests different new functionality
@@ -91,6 +93,28 @@ void test_simple_obj() {
     std::clog << "object_2 = " << obj_2.obj_to_world_matrix << std::endl;
 }
 
+void test_sphere() {
+    sphere s = sphere();
+    std::clog << "s = " << s.obj_to_world_matrix << std::endl;
+    sphere t = sphere(vec3(1, 2, 3), 5);
+    std::clog << "t = " << t.obj_to_world_matrix << std::endl;
+}
+
+void test_camera() {
+    // test basic constructor
+    camera b = camera();
+    std::clog << "b = " << b.obj_to_world_matrix << std::endl;
+    // test constructor with pos given
+    camera c = camera(vec3(1, 2, 3));
+    std::clog << "c = " << c.obj_to_world_matrix << std::endl;
+    // test constructor with just rotation given
+    camera d = camera(90, 0, 0);
+    std::clog << "d = " << d.obj_to_world_matrix << std::endl;
+    // test constructor with pos and rotation given
+    camera e = camera(vec3(1, 2, 3), 90, 0, 0);
+    std::clog << "e = " << e.obj_to_world_matrix << std::endl;
+}
+
 int main() {
     hittable_list world;  // make list of hittable objects -> later: chnge to list of simple_objects
 
@@ -101,14 +125,15 @@ int main() {
     // world.add(make_shared<sphere>(point3(0, 0, -1), 0.5));       // make the sphere
     world.add(make_shared<sphere_old>(point3(0, -100.5, -1), 100));  // make green "floor" which is a sphere // same
 
-    camera cam;  // create camera object // later: create new camera object
+    camera_old cam;  // create camera object // later: create new camera object
 
     // later: change this in the new camera such that this is set by a constructor
     cam.aspect_ratio = 16.0 / 9.0;  // image width to image height is 16:9 
     cam.image_width  = 400;
     cam.samples_per_pixel = 100;  // anti-aliasing?
 
-    test_simple_obj();
+    test_sphere();
+    test_camera();
 
     cam.render(world);
 }
