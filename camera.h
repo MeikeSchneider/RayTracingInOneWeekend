@@ -17,7 +17,8 @@ class camera {
         renders the image by writing directly into a file
         pixels are written in rows left to right, top to bottom
     */
-    void render(const hittable& world) {
+    void render(const hittable& world) {  // change such that it takes the simple_obj list
+        // change this function if using a different file format
         initialize();
         /*  P3
             400 225
@@ -84,14 +85,15 @@ class camera {
         pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
     }
 
-
     ray get_ray(int i, int j) const {
         /* Construct a camera ray originating from the origin and directed at randomly sampled
         point around the pixel location i, j. */
+        // something with anti-aliasing
         auto offset = sample_square();
         auto pixel_sample = pixel00_loc
                           + ((i + offset.x()) * pixel_delta_u)
                           + ((j + offset.y()) * pixel_delta_v);
+        // set ray origin to center of camera
         auto ray_origin = center;
         auto ray_direction = pixel_sample - ray_origin;
         return ray(ray_origin, ray_direction);
@@ -103,12 +105,22 @@ class camera {
     }
 
     color ray_color(const ray& r, const hittable& world) const {
+        // later: function takes a ray and the list of simple_objects in the world
+        // has information about hits 
         hit_record rec;
 
-        if (world.hit(r, interval(0, infinity), rec)) {
+        // wenn es Treffer in der Welt gab:
+        // 1. world.hit schreibt Treffer in hit record rein und gibt true zurück
+        // 2. und gib die Farbe anhand der Info im hit record zurück
+        // world.hit(ray, interval, hit record)
+        if (world.hit(r, interval(0, infinity), rec)) { // change based on new hit function and simple_obj list
+            // nimmt aus hit record normalen vektor raus, addiert (1, 1, 1) drauf, multipliziert mit 0.5
+            // (macht man um den Zahlenraum -1 bis 1 auf 0 bis 1 zu skalieren)
+            // add phong here
             return 0.5 * (rec.normal + color(1, 1, 1));
         }
-
+        
+        // wenn man nichts trifft, male den Hintergrund schön -> daher das himmelblau
         vec3 unit_direction = unit_vector(r.direction());
         auto a = 0.5 * (unit_direction.y() + 1.0);
         return (1.0-a) * color(1.0, 1.0, 1.0) + a * color(0.5, 0.7, 1.0);

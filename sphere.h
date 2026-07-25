@@ -1,46 +1,23 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
-#include "hittable.h"
-#include "vec3.h"
+#include "simple_object.h"
+#include "camera.h"
 
-class sphere : public hittable {
-  public:
-    sphere(const point3& center, double radius) : center(center), radius(std::fmax(0,radius)) {}
-
-    bool hit(const ray& r, interval ray_t, hit_record& rec) const override {
-        vec3 oc = center - r.origin();
-        auto a = r.direction().length_squared();
-        auto h = dot(r.direction(), oc);
-        auto c = oc.length_squared() - radius * radius;
-
-        auto discriminant = h * h - a * c;
-        if (discriminant < 0)
-            return false;
-
-        auto sqrtd = std::sqrt(discriminant);
-
-        // Find the nearest root that lies in the acceptable range.
-        auto root = (h - sqrtd) / a;
-        if (!ray_t.surrounds(root)) {
-            root = (h + sqrtd) / a;
-            if (!ray_t.surrounds(root))
-                return false;
-        }
-
-        rec.t = root;
-        rec.p = r.at(rec.t);
-        // surface side determination
-        vec3 outward_normal = (rec.p - center) / radius;
-        rec.set_face_normal(r, outward_normal);
-
-
-        return true;
+class sphere : simple_object {
+    // für sphere is simple object die Basis Klasse
+    // -> Construktoren von simple object sind basis construktoren
+    // constructor
+    // TODO standart construktor: sag dass wenn keine Eingabe 
+    // -> benutze construktor von simple object (google how to call base constructor)
+    // TODo: constructor mit float radius (vec3 scale), vec3 pos (translation) given
+    // radius 1 -> scale (1, 1, 1)
+    // benutze dafür basis constructor simple_object(vec3 translation, vec3 scale)
+    
+    bool hit(const ray& r, interval ray_t, camera& cam, hit_record& rec) const {
+    // von Sören erklärtes Mathe hier einfügen 
+    return false;
     }
-
-  private:
-    point3 center;
-    double radius;
 };
 
 #endif

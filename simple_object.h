@@ -3,6 +3,9 @@
 
 #include "matrix.h"
 #include "vec3.h"
+#include "ray.h"
+#include "interval.h"
+#include "camera.h"
 
 class simple_object {
     /*
@@ -62,6 +65,11 @@ class simple_object {
         obj_to_world_matrix.e[7]  = position.y();
         obj_to_world_matrix.e[11] = position.z();
     }
+
+    // hit function. Place holder for overwriting later, sets an object as not hittable as a standard
+    // wenn es später Probleme gibt wegen inclusion kreis (camera includes simple object which includes camera)
+    // just give hit function the world_to_obj matrix instead of the whole camera 
+    bool hit(const ray& r, interval ray_t, camera& cam, hit_record& rec) const { return false; }
 
 };
 

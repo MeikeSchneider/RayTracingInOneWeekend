@@ -2,7 +2,7 @@
 #include "camera.h"
 #include "hittable.h"
 #include "hittable_list.h"
-#include "sphere.h"
+#include "sphere_old.h"
 
 #include "vec4.h"
 #include "matrix.h"
@@ -92,18 +92,19 @@ void test_simple_obj() {
 }
 
 int main() {
-    hittable_list world;  // make list of hittable objects
+    hittable_list world;  // make list of hittable objects -> later: chnge to list of simple_objects
 
     // add sphere and "floor" to hittables
-    point3 sphere_center = point3(0, 0, -1);
+    point3 sphere_center = point3(0, 0, -1); // later: use new sphere
     float radius = 0.5;
-    world.add(make_shared<sphere>(sphere_center, radius));
+    world.add(make_shared<sphere_old>(sphere_center, radius)); // later: add new sphere to simple_obj list
     // world.add(make_shared<sphere>(point3(0, 0, -1), 0.5));       // make the sphere
-    world.add(make_shared<sphere>(point3(0, -100.5, -1), 100));  // make green "floor" which is a sphere
+    world.add(make_shared<sphere_old>(point3(0, -100.5, -1), 100));  // make green "floor" which is a sphere // same
 
-    camera cam;  // create camera object
+    camera cam;  // create camera object // later: create new camera object
 
-    cam.aspect_ratio = 16.0 / 9.0;  // image width to image height is 16:9
+    // later: change this in the new camera such that this is set by a constructor
+    cam.aspect_ratio = 16.0 / 9.0;  // image width to image height is 16:9 
     cam.image_width  = 400;
     cam.samples_per_pixel = 100;  // anti-aliasing?
 

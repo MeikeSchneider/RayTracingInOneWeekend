@@ -26,6 +26,7 @@ class hit_record {
 class hittable {
   public:
     virtual ~hittable() = default;
+    // virtual sagt, dass alles was von hittable erbt, hier tatsächliche Funktionalität rein packen muss
     virtual bool hit(const ray& r, interval ray_t, hit_record& rec) const = 0;
 };
 
