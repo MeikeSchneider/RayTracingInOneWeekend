@@ -12,12 +12,9 @@ class camera_old {
     int    image_width  = 100;      // Rendered image width in pixel count
     int    samples_per_pixel = 10;  // Count of random samples for each pixel
 
-
-    /*
-        renders the image by writing directly into a file
-        pixels are written in rows left to right, top to bottom
-    */
     void render(const hittable& world) {  // change such that it takes the simple_obj list
+        // renders the image by writing directly into a file
+        // pixels are written in rows left to right, top to bottom
         // change this function if using a different file format
         initialize();
         /*  P3

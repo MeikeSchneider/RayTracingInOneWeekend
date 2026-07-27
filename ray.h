@@ -12,7 +12,7 @@ class ray {
     // give origin and direction value, use those to set orig and dir, give object
     ray(const point3& origin, const vec3& direction) : orig(origin), dir(direction) {}
     
-    // refernece to origin: ray origin A, return private var oig
+    // refernece to origin: ray origin A, return private var
     const point3& origin() const  { return orig; }
     // dir: ray direction b
     const vec3& direction() const { return dir; }

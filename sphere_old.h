@@ -16,6 +16,7 @@ class sphere_old : public hittable {
         auto h = dot(r.direction(), oc);
         auto c = oc.length_squared() - radius * radius;
 
+        // discriminiant is the stuff under the root in the abc formula
         auto discriminant = h * h - a * c;
         if (discriminant < 0)
             return false;
@@ -29,13 +30,14 @@ class sphere_old : public hittable {
             if (!ray_t.surrounds(root))
                 return false;
         }
-
+        // root is t from ray equation
+        // set calculated t in hit record
         rec.t = root;
+        // calculate intersection point ray-sphere
         rec.p = r.at(rec.t);
         // surface side determination
         vec3 outward_normal = (rec.p - center) / radius;
         rec.set_face_normal(r, outward_normal);
-
 
         return true;
     }

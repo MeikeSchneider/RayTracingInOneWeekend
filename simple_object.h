@@ -57,7 +57,7 @@ class simple_object {
         }
 
         // bool hit(const ray& r, interval ray_t, const camera& cam, hit_record& rec) const {
-        bool hit(const ray& r, interval ray_t, const matrix camera_matrix, hit_record& rec) const {
+        bool hit(const ray& r, interval ray_t, const matrix camera_to_world_matrix, hit_record& rec) const {
             /*
             hit function. Place holder for overwriting later, sets an object as not hittable as a standard
             wenn es später Probleme gibt wegen inclusion kreis (camera includes simple object which includes camera)

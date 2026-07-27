@@ -94,10 +94,15 @@ void test_simple_obj() {
 }
 
 void test_sphere() {
+    // test constructors
     sphere s = sphere();
-    std::clog << "s = " << s.obj_to_world_matrix << std::endl;
+    // std::clog << "s = " << s.obj_to_world_matrix << std::endl;
     sphere t = sphere(vec3(1, 2, 3), 5);
-    std::clog << "t = " << t.obj_to_world_matrix << std::endl;
+    // std::clog << "t = " << t.obj_to_world_matrix << std::endl;
+    ray r = ray(vec3(0, 0, 0), vec3(1, 1, 1));
+    hit_record rect;
+    bool result = s.hit(r, interval(0, infinity), matrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1), rect);
+    std::clog << "result = " << result << std::endl;
 }
 
 void test_camera() {
@@ -137,7 +142,7 @@ int main() {
     cam.samples_per_pixel = 100;  // anti-aliasing?
 
     test_sphere();
-    test_camera();
+    // test_camera();
 
     cam.render(world);
 }
