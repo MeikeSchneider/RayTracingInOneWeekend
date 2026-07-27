@@ -9,6 +9,7 @@
 #include "matrix.h"
 #include "simple_object.h"
 #include "sphere.h"
+#include "objects_in_scene.h"
 
 void test_vectors() {
     // tests different new functionality
@@ -121,27 +122,29 @@ void test_camera() {
 }
 
 int main() {
-    hittable_list world;  // make list of hittable objects -> later: chnge to list of simple_objects
-    // std::vector<simple_object> world;
+    // hittable_list world;  // make list of hittable objects -> later: chnge to list of simple_objects
+    // std::vector<simple_object> world; // TODO change to objects_in_scene world;
+    objects_in_scene world;
 
     // add sphere and "floor" to hittables
     point3 sphere_center = point3(0, 0, -1); // later: use new sphere
     float radius = 0.5;
-    // world.push_back(sphere(sphere_center, radius));
-    // world.push_back(sphere(point3(0, 0, -1), 0.5));
-    // world.push_back(sphere(point3(0, -100.5, -1), 100));
-    world.add(make_shared<sphere_old>(sphere_center, radius)); // make the sphere
-    world.add(make_shared<sphere_old>(point3(0, -100.5, -1), 100));  // make green "floor" which is a sphere // same
-
-    camera_old cam;  // create camera object // later: create new camera object
-    // camera cam;
+    // tutorial version: world.add(make_shared<sphere_old>(sphere_center, radius)); // make the sphere
+    // tutorial version world.add(make_shared<sphere_old>(point3(0, -100.5, -1), 100));  // make green "floor" which is a sphere // same
+    // second version: world.push_back(sphere(sphere_center, radius)); // TODO add: make it shared, change it to world.add(make_shared<sphere>(sphere_center, radius))
+    // second version: world.push_back(sphere(point3(0, -100.5, -1), 100)); // TODO: same 
+    
+    world.add(make_shared<sphere>(sphere_center, radius));
+    world.add(make_shared<sphere>(point3(0, -100.5, -1), 100));
+    // tutorial version: camera_old cam;  // create camera object // later: create new camera object
+    camera cam;
 
     // later: change this in the new camera such that this is set by a constructor
     cam.aspect_ratio = 16.0 / 9.0;  // image width to image height is 16:9 
     cam.image_width  = 400;
     cam.samples_per_pixel = 100;  // anti-aliasing?
 
-    test_sphere();
+    // test_sphere();
     // test_camera();
 
     cam.render(world);

@@ -20,7 +20,8 @@ class sphere : public simple_object {
             obj_to_world_matrix = matrix::Scale(scale) *  matrix::Translation(translation);
         }
     
-        bool hit(const ray& r, interval ray_t, const matrix camera_to_world_matrix, hit_record& rec) const {
+        bool hit(const ray& r, interval ray_t, const matrix camera_to_world_matrix, hit_record& rec) const override {
+            std::clog << "went into hit function" << std::endl;
             // function that transformes ray into object space of sphere and checks for hits there
             // A_WtO matrix, inverse of world_to_obj_matrix of sphere
             matrix world_to_obj_matrix = invert(this->obj_to_world_matrix);
@@ -31,17 +32,17 @@ class sphere : public simple_object {
             // calculate t with abc formula
             vec3 C = vec3(0, 0, 0);
             double a = dot(direction_in_obj_space, direction_in_obj_space);
-            std::clog << "a, direction_in_obj_space = " << a << ", " << direction_in_obj_space << std::endl;
+            // std::clog << "a, direction_in_obj_space = " << a << ", " << direction_in_obj_space << std::endl;
             double b = dot(direction_in_obj_space, (C - origin_in_obj_space));
-            std::clog << "b, origin_in_obj_space = " << b << ", " << origin_in_obj_space << std::endl;
+            // std::clog << "b, origin_in_obj_space = " << b << ", " << origin_in_obj_space << std::endl;
             double c = dot((C - origin_in_obj_space), (C - origin_in_obj_space)) - 1;
-            std::clog << "c = " << c << std::endl;
+            // std::clog << "c = " << c << std::endl;
 
             // calculate stuff under root(discriminat)
             auto discriminant = b * b - a * c;
             // check that discriminant is positiv
-            if (discriminant < 0)
-                return false;
+            std::clog << "discriminant = " << discriminant << std::endl;
+            if (discriminant < 0) { return false; }
             // calculate squareroot
             auto sqrtd = std::sqrt(discriminant);
             // find the nearest root that is positive
@@ -67,6 +68,8 @@ class sphere : public simple_object {
             // outward_normal is normalized p in camera space
             vec3 outward_normal = unit_vector(p_in_cam_space);
             rec.set_face_normal(r, outward_normal);
+
+            return true;
         }
 };
 

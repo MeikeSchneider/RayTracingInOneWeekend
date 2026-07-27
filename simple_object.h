@@ -57,13 +57,14 @@ class simple_object {
         }
 
         // bool hit(const ray& r, interval ray_t, const camera& cam, hit_record& rec) const {
-        bool hit(const ray& r, interval ray_t, const matrix camera_to_world_matrix, hit_record& rec) const {
+        virtual bool hit(const ray& r, interval ray_t, const matrix camera_to_world_matrix, hit_record& rec) const {
             /*
             hit function. Place holder for overwriting later, sets an object as not hittable as a standard
             wenn es später Probleme gibt wegen inclusion kreis (camera includes simple object which includes camera)
             just give hit function the world_to_obj matrix instead of the whole camera 
             bool hit(const ray& r, interval ray_t, const camera_old& cam, hit_record& rec) const { return false; }
             */
+            std::clog << "called base function" << std::endl;
             return false;
         }
 

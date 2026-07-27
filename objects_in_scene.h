@@ -1,12 +1,9 @@
-#ifndef HITTABLE_LIST_H
-#define HITTABLE_LIST_H
+#ifndef OBJECTS_IN_SCENE.H
+#define OBJECTS_IN_SCENE.H
 
-#include "hittable.h"
-#include "interval.h"
-
+#include "simple_object.h"
 #include <memory>
 #include <vector>
-
 /*
 shared_ptr<type>: is a pointer to some type with reference-counting. 
 Every time it's value is assigned to another shared pointer, reference count is increased
@@ -23,26 +20,26 @@ from the std library, so we don't need to prefix these with std:: every time we 
 using std::make_shared;
 using std::shared_ptr;  // does memory management automatically so we don't need to worry about it
 
-class hittable_list : public hittable {
+
+class objects_in_scene {
   public:
     // basically a list containing shared pointers pointing to different hittables
-    std::vector<shared_ptr<hittable>> objects;
+    std::vector<shared_ptr<simple_object>> objects;
     /*
     zB erzeuge Kugel. Möchte mehrere Sachen damit machen, also zeigen mehrere pointer drauf
     shared pointer hat counter um sich zu merken, wie viele pointer drauf zeigen.
     Wenn nichts mehr drauf zeigt weiß der shared pointer, dass das Objekt gelöscht werden soll.
     */
 
-    hittable_list() {}
-    hittable_list(shared_ptr<hittable> object) { add(object); }
-
+    objects_in_scene() {}
+    objects_in_scene(shared_ptr<simple_object> object) { add(object); }
     void clear() { objects.clear(); }
 
-    void add(shared_ptr<hittable> object) {
+    void add(shared_ptr<simple_object> object) {
         objects.push_back(object);
     }
 
-    bool hit(const ray& r, interval ray_t, hit_record& rec) const override {
+    bool hit(const ray& r, interval ray_t, hit_record& rec) const {
         // TODO: add matrix in declaration
         hit_record temp_rec;
         bool hit_anything = false;
@@ -50,17 +47,14 @@ class hittable_list : public hittable {
         
         // iteriere durch hittable list/ liste von objekten 
         // mit iterationsobjekt object
-        // TODO: copy the while thing in a new file called objects_in_scene. Rename the class hittable list to objects_in_scene.
-        // It does not inherit from anything. Change the hit function as described
         for (const auto& object : objects) {
-            if (object->hit(r, interval(ray_t.min, closest_so_far), temp_rec)) {
-                // add: if (clostest_so_far (is bigger), temp_rec.t (is smaller, hopefully))
-                // if (temp_rec.t < closest_so_far) {
-                // do the three lines }
-                // "->"" is dereferencing
-                hit_anything = true;
-                closest_so_far = temp_rec.t;
-                rec = temp_rec;
+            // "->"" is dereferencing
+            if (object->hit(r, interval(ray_t.min, closest_so_far), matrix(), temp_rec)) {
+                if (temp_rec.t < closest_so_far) {
+                    hit_anything = true;
+                    closest_so_far = temp_rec.t;
+                    rec = temp_rec;
+                }
             }
         }
 

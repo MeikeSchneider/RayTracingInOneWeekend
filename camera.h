@@ -38,7 +38,7 @@ class camera : public simple_object {
         obj_to_world_matrix = rotation *  matrix::Translation(position);
     }
 
-    void render(const std::vector<simple_object> world) {
+    void render(const std::vector<simple_object> world) { // TODO: change to objects_in_scene
         // change this function if using a different file format
         initialize();
         /*  P3
@@ -52,7 +52,7 @@ class camera : public simple_object {
                 color pixel_color(0, 0, 0);
                 for (int sample = 0; sample < samples_per_pixel; sample++) {
                     ray r = get_ray(i, j);
-                    pixel_color += ray_color(r, world);
+                    pixel_color += ray_color(r, world); //TODO: change ray_color to use objects_in_scene
                 }
                 write_color(std::cout, pixel_samples_scale * pixel_color);
             }
@@ -131,6 +131,7 @@ class camera : public simple_object {
 
         for (int i = 0; i < world.size(); i++) {
             if (world[i].hit(r, interval(0, infinity), this->obj_to_world_matrix, rec)) {
+                std::clog << "went into the drawing if" << std::endl;
                 // takes the normal vector from hit record, adds (1, 1, 1), multiplies by 0.5
                 // (is done to scale numbers from -1, 1 to 0, 1)
                 // add phong here
