@@ -34,13 +34,15 @@ class simple_object {
             order of operation:
             rotation: z * y * x
             everyting: scale * rotation * translation  */
+            //DONE TODO
             matrix rotation = matrix::ZRotation(zRotation) * (matrix::YRotation(yRotation) * matrix::XRotation(xRotation));
-            obj_to_world_matrix = matrix::Scale(scale) * (rotation *  matrix::Translation(translation));
+            obj_to_world_matrix = matrix::Translation(translation) * (rotation *  matrix::Scale(scale));
         } 
         
         simple_object(vec3 translation, vec3 scale) {
             // constructor with translation and scale given
-            obj_to_world_matrix = matrix::Scale(scale) *  matrix::Translation(translation);
+            // DONE TODO
+            obj_to_world_matrix = matrix::Translation(translation) * matrix::Scale(scale);
         }
         
         void move(const vec3& position) {

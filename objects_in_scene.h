@@ -1,5 +1,5 @@
-#ifndef OBJECTS_IN_SCENE.H
-#define OBJECTS_IN_SCENE.H
+#ifndef OBJECTS_IN_SCENE_H
+#define OBJECTS_IN_SCENE_H
 
 #include "simple_object.h"
 #include <memory>
@@ -48,8 +48,10 @@ class objects_in_scene {
         // iteriere durch hittable list/ liste von objekten 
         // mit iterationsobjekt object
         for (const auto& object : objects) {
+            // std::clog << "sphere radius: " << object->obj_to_world_matrix.e[0] << std::endl;
             // "->"" is dereferencing
             if (object->hit(r, interval(ray_t.min, closest_so_far), matrix(), temp_rec)) {
+                std::clog << "hit detected" << std::endl;
                 if (temp_rec.t < closest_so_far) {
                     hit_anything = true;
                     closest_so_far = temp_rec.t;

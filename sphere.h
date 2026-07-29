@@ -17,25 +17,44 @@ class sphere : public simple_object {
             // constructor with translation and scale given
             vec3 scale = vec3(radius, radius, radius);
             vec3 translation = position;
-            obj_to_world_matrix = matrix::Scale(scale) *  matrix::Translation(translation);
+            obj_to_world_matrix = matrix::Translation(translation) *  matrix::Scale(scale);
         }
     
         bool hit(const ray& r, interval ray_t, const matrix camera_to_world_matrix, hit_record& rec) const override {
-            std::clog << "went into hit function" << std::endl;
+            // std::clog << "went into hit function" << std::endl;
             // function that transformes ray into object space of sphere and checks for hits there
             // A_WtO matrix, inverse of world_to_obj_matrix of sphere
             matrix world_to_obj_matrix = invert(this->obj_to_world_matrix);
             // direction of ray transformed into object space of sphere
+            // TODO: somehow fix wrong z value (doesn't double)
             vec3 direction_in_obj_space = vec4_to_vec3(world_to_obj_matrix * (camera_to_world_matrix * vec3_to_vec4(r.direction())));
+            // std::clog << "r.direction() = " << r.direction() << std::endl;
+            // std::clog << "vec3_to_vec4(r.direction()) = " << vec3_to_vec4(r.direction()) << std::endl;
+            // std::clog << "camera_to_world_matrix * vec3_to_vec4(r.direction()) = " << camera_to_world_matrix * vec3_to_vec4(r.direction()) << std::endl;
+            // std::clog << "direction_in_obj_space = " << direction_in_obj_space << std::endl;
             // same for origin
             vec3 origin_in_obj_space = vec4_to_vec3(world_to_obj_matrix * (camera_to_world_matrix * vec3_to_vec4(r.origin())));
+            std::clog << "r.origin() = " << r.origin() << std::endl;
+            std::clog << "vec3_to_vec4(r.origin()) = " << vec3_to_vec4(r.origin()) << std::endl;
+            std::clog << "camera_to_world_matrix * vec3_to_vec4(r.origin())) = " << camera_to_world_matrix * vec3_to_vec4(r.origin()) << std::endl;
+            std::clog << "world_to_obj_matrix * (camera_to_world_matrix * vec3_to_vec4(r.origin())) = " << world_to_obj_matrix * (camera_to_world_matrix * vec3_to_vec4(r.origin())) << std::endl;
+            std::clog << "world_to_obj_matrix * obj_to_world_matrix = " << world_to_obj_matrix * obj_to_world_matrix << std::endl;
+
+            std::clog << "ray origin camera space, direction camera space = " << r.origin() << ", " << r.direction() << std::endl;
+            std::clog << "ray origin_in_obj_space, direction_in_obj_space = " << origin_in_obj_space << ", " << direction_in_obj_space << std::endl;
+            std::clog << "camera_to_world_matrix = " << camera_to_world_matrix << std::endl;
+            std::clog << "world_to_obj_matrix = " << world_to_obj_matrix << std::endl;
+            std::clog << "obj_to_world_matrix = " << obj_to_world_matrix << std::endl;
+            // std::clog << "world_to_obj_matrix * camera_to_world_matrix = " << world_to_obj_matrix * camera_to_world_matrix << std::endl;
+            
             // calculate t with abc formula
             vec3 C = vec3(0, 0, 0);
             double a = dot(direction_in_obj_space, direction_in_obj_space);
-            // std::clog << "a, direction_in_obj_space = " << a << ", " << direction_in_obj_space << std::endl;
-            double b = dot(direction_in_obj_space, (C - origin_in_obj_space));
-            // std::clog << "b, origin_in_obj_space = " << b << ", " << origin_in_obj_space << std::endl;
-            double c = dot((C - origin_in_obj_space), (C - origin_in_obj_space)) - 1;
+            // std::clog << "a = " << a << std::endl;
+            double b = dot(direction_in_obj_space, (origin_in_obj_space-C));
+            // std::clog << "C - origin_in_obj_space = " << (C - origin_in_obj_space) << std::endl;
+            // std::clog << "b = " << b << std::endl;
+            double c = dot((origin_in_obj_space-C), (origin_in_obj_space-C)) - 1;
             // std::clog << "c = " << c << std::endl;
 
             // calculate stuff under root(discriminat)

@@ -62,17 +62,22 @@ void test_matrix_invert() {
                       0, 0, 1, 8, 
                       0, 0, 0, 1);
     std::clog << "invert(A) = " << invert(A) << std::endl;
+    matrix B = {7, 2, 1, 0,
+                0, 3, -1, 0,
+                -3, 4, -2, 0,
+                0, 0, 0, 1};
+    std::clog << "invert(B) = " << invert(B) << std::endl;
 
     // test for Translation matrix
-    std::clog << "Translation matrix = " << matrix::Translation(vec3(1, 2, 3)) << std::endl;
+    // std::clog << "Translation matrix = " << matrix::Translation(vec3(1, 2, 3)) << std::endl;
     // test for Scale matrix
-    std::clog << "Scale matrix = " << matrix::Scale(vec3(1, 2, 3)) << std::endl;
+    // std::clog << "Scale matrix = " << matrix::Scale(vec3(1, 2, 3)) << std::endl;
     // test for XRotation matrix
-    std::clog << "XRotation matrix = " << matrix::XRotation(90) << std::endl;
+    // std::clog << "XRotation matrix = " << matrix::XRotation(90) << std::endl;
     // test for YRotation matrix
-    std::clog << "YRotation matrix = " << matrix::YRotation(90) << std::endl;
+    // std::clog << "YRotation matrix = " << matrix::YRotation(90) << std::endl;
     // test for ZRotation matrix
-    std::clog << "ZRotation matrix = " << matrix::ZRotation(90) << std::endl;
+    // std::clog << "ZRotation matrix = " << matrix::ZRotation(90) << std::endl;
 }
 
 void test_simple_obj() {
@@ -122,30 +127,31 @@ void test_camera() {
 }
 
 int main() {
-    // hittable_list world;  // make list of hittable objects -> later: chnge to list of simple_objects
-    // std::vector<simple_object> world; // TODO change to objects_in_scene world;
+    // hittable_list world;  // make list of hittable objects
     objects_in_scene world;
 
     // add sphere and "floor" to hittables
     point3 sphere_center = point3(0, 0, -1); // later: use new sphere
-    float radius = 0.5;
+    float radius = 0.5;  // was 0.5
     // tutorial version: world.add(make_shared<sphere_old>(sphere_center, radius)); // make the sphere
     // tutorial version world.add(make_shared<sphere_old>(point3(0, -100.5, -1), 100));  // make green "floor" which is a sphere // same
     // second version: world.push_back(sphere(sphere_center, radius)); // TODO add: make it shared, change it to world.add(make_shared<sphere>(sphere_center, radius))
     // second version: world.push_back(sphere(point3(0, -100.5, -1), 100)); // TODO: same 
-    
     world.add(make_shared<sphere>(sphere_center, radius));
-    world.add(make_shared<sphere>(point3(0, -100.5, -1), 100));
-    // tutorial version: camera_old cam;  // create camera object // later: create new camera object
-    camera cam;
+    // world.add(make_shared<sphere>(point3(0, -100.5, -1), 100));
+
+    // tutorial version: camera_old cam;
+    camera cam; // create camera object
 
     // later: change this in the new camera such that this is set by a constructor
     cam.aspect_ratio = 16.0 / 9.0;  // image width to image height is 16:9 
     cam.image_width  = 400;
-    cam.samples_per_pixel = 100;  // anti-aliasing?
+    // cam.samples_per_pixel = 100;  // anti-aliasing
+    cam.samples_per_pixel = 1;  // anti-aliasing
 
     // test_sphere();
     // test_camera();
+    // test_matrix_invert();
 
     cam.render(world);
 }

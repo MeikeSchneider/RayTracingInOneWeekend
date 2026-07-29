@@ -7,6 +7,7 @@
 
 #include "color.h"
 #include "simple_object.h"
+#include "objects_in_scene.h"
 
 class camera : public simple_object {
     public:
@@ -24,7 +25,8 @@ class camera : public simple_object {
         // constructor with translation and scale given
         vec3 scale = vec3(1, 1, 1);
         vec3 translation = position;
-        obj_to_world_matrix = matrix::Scale(scale) *  matrix::Translation(translation);
+        // DONE TODO
+        obj_to_world_matrix = matrix::Translation(translation) * matrix::Scale(scale);
     }
 
     camera(float xRotation, float yRotation, float zRotation) {
@@ -34,11 +36,12 @@ class camera : public simple_object {
 
     camera(vec3 position, float xRotation, float yRotation, float zRotation) {
         // constructor with position and rotation given
+        // DONE TODO
         matrix rotation = matrix::ZRotation(zRotation) * (matrix::YRotation(yRotation) * matrix::XRotation(xRotation));
-        obj_to_world_matrix = rotation *  matrix::Translation(position);
+        obj_to_world_matrix = matrix::Translation(position) * rotation;
     }
 
-    void render(const std::vector<simple_object> world) { // TODO: change to objects_in_scene
+    void render(objects_in_scene& world) {
         // change this function if using a different file format
         initialize();
         /*  P3
@@ -52,7 +55,8 @@ class camera : public simple_object {
                 color pixel_color(0, 0, 0);
                 for (int sample = 0; sample < samples_per_pixel; sample++) {
                     ray r = get_ray(i, j);
-                    pixel_color += ray_color(r, world); //TODO: change ray_color to use objects_in_scene
+                    // std::clog << "ray origin, direction = " << r.origin() << ", " << r.direction() << std::endl;
+                    pixel_color += ray_color(r, world);
                 }
                 write_color(std::cout, pixel_samples_scale * pixel_color);
             }
@@ -119,7 +123,7 @@ class camera : public simple_object {
     }
     
     // color ray_color(const ray& r, const hittable& world) const {
-    color ray_color(const ray& r, std::vector<simple_object> world) const {
+    color ray_color(const ray& r, objects_in_scene& world) const { // TODO: change to objects_in_scene world
         // function takes a ray and the list of simple_objects in the world
         // this holds information about hits
         hit_record rec;
@@ -129,15 +133,16 @@ class camera : public simple_object {
         // 2. and returns Color based on information in hit record
         // world.hit(ray, interval, camera, hit record)
 
-        for (int i = 0; i < world.size(); i++) {
-            if (world[i].hit(r, interval(0, infinity), this->obj_to_world_matrix, rec)) {
-                std::clog << "went into the drawing if" << std::endl;
+        // for (int i = 0; i < world.size(); i++) {
+            // if (world[i].hit(r, interval(0, infinity), this->obj_to_world_matrix, rec)) {
+            if (world.hit(r, interval(0, infinity), rec)) {
+                // std::clog << "went into the drawing if" << std::endl;
                 // takes the normal vector from hit record, adds (1, 1, 1), multiplies by 0.5
                 // (is done to scale numbers from -1, 1 to 0, 1)
                 // add phong here
                 return 0.5 * (rec.normal + color(1, 1, 1));
             }
-        }
+        // }
         
         // wenn man nichts trifft, male den Hintergrund schön -> daher das himmelblau
         vec3 unit_direction = unit_vector(r.direction());
