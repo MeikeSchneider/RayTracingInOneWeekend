@@ -51,7 +51,7 @@ class objects_in_scene {
             // std::clog << "sphere radius: " << object->obj_to_world_matrix.e[0] << std::endl;
             // "->"" is dereferencing
             if (object->hit(r, interval(ray_t.min, closest_so_far), matrix(), temp_rec)) {
-                std::clog << "hit detected" << std::endl;
+                // std::clog << "hit detected" << std::endl;
                 if (temp_rec.t < closest_so_far) {
                     hit_anything = true;
                     closest_so_far = temp_rec.t;
