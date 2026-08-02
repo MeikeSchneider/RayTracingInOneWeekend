@@ -165,7 +165,6 @@ inverse(m) = A^-1   A^-1 * vektor
 A^-1 = 1/det(A) * adj(A)
 */
 // calculate determinant of 3x3 matrix A
-// det_A calculation tested, works.
 float det_A = (m.e[0] * (m.e[5] * m.e[10] - m.e[6] * m.e[9]) -
                m.e[1] * (m.e[4] * m.e[10] - m.e[6] * m.e[8]) + 
                m.e[2] * (m.e[4] * m.e[9]  - m.e[5] * m.e[8]));
@@ -174,7 +173,6 @@ float det_A = (m.e[0] * (m.e[5] * m.e[10] - m.e[6] * m.e[9]) -
 a   b   c
 d   e   f
 g   h   i
-A^-1 tested, works. 
 */
 float a = 1 / det_A * (m.e[5] * m.e[10] - m.e[6] * m.e[9]);
 float b = 1 / det_A * (m.e[2] * m.e[9]  - m.e[1] * m.e[10]);

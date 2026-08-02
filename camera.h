@@ -131,20 +131,14 @@ class camera : public simple_object {
         // if stuff in the world is hit:
         // 1. world.hit writes hits into hit record, returns True
         // 2. and returns Color based on information in hit record
-        // world.hit(ray, interval, camera, hit record)
-
-        // for (int i = 0; i < world.size(); i++) {
-            // if (world[i].hit(r, interval(0, infinity), this->obj_to_world_matrix, rec)) {
-            if (world.hit(r, interval(0, infinity), rec)) {
-                // std::clog << "went into the drawing if" << std::endl;
-                // takes the normal vector from hit record, adds (1, 1, 1), multiplies by 0.5
-                // (is done to scale numbers from -1, 1 to 0, 1)
-                // add phong here
-                return 0.5 * (rec.normal + color(1, 1, 1));
-            }
-        // }
+        if (world.hit(r, interval(0, infinity), rec)) {
+            // takes the normal vector from hit record, adds (1, 1, 1), multiplies by 0.5
+            // (is done to scale numbers from -1, 1 to 0, 1)
+            // add phong here
+            return 0.5 * (rec.normal + color(1, 1, 1));
+        }
         
-        // wenn man nichts trifft, male den Hintergrund schön -> daher das himmelblau
+        // if nothing is hit: paint the background blue
         vec3 unit_direction = unit_vector(r.direction());
         auto a = 0.5 * (unit_direction.y() + 1.0);
         return (1.0 - a) * color(1.0, 1.0, 1.0) + a * color(0.5, 0.7, 1.0);
