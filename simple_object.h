@@ -20,12 +20,23 @@ class simple_object {
         // Matrix always represents the transformation from object space to world space
         matrix obj_to_world_matrix;
     
-        simple_object() {obj_to_world_matrix = matrix(
+        simple_object() {
             // empty constructor: identity matrix
+            obj_to_world_matrix = matrix(
             1, 0, 0, 0,
             0, 1, 0, 0, 
             0, 0, 1, 0,
             0, 0, 0, 1);
+        }
+
+        simple_object(vec3 translation) {
+            // constructor with translation
+            obj_to_world_matrix = matrix::Translation(translation);
+        }
+
+        simple_object(vec3 translation, vec3 scale) {
+            // constructor with translation and scale given
+            obj_to_world_matrix = matrix::Translation(translation) * matrix::Scale(scale);
         }
 
         simple_object(vec3 translation, vec3 scale, float xRotation, float yRotation, float zRotation) {
@@ -34,16 +45,9 @@ class simple_object {
             order of operation:
             rotation: z * y * x
             everyting: scale * rotation * translation  */
-            //DONE TODO
             matrix rotation = matrix::ZRotation(zRotation) * (matrix::YRotation(yRotation) * matrix::XRotation(xRotation));
             obj_to_world_matrix = matrix::Translation(translation) * (rotation *  matrix::Scale(scale));
         } 
-        
-        simple_object(vec3 translation, vec3 scale) {
-            // constructor with translation and scale given
-            // DONE TODO
-            obj_to_world_matrix = matrix::Translation(translation) * matrix::Scale(scale);
-        }
         
         void move(const vec3& position) {
             // takes in a position that should be added to the current position, makes a translation matrix out of it
@@ -58,18 +62,11 @@ class simple_object {
             obj_to_world_matrix.e[11] = position.z();
         }
 
-        // bool hit(const ray& r, interval ray_t, const camera& cam, hit_record& rec) const {
         virtual bool hit(const ray& r, interval ray_t, const matrix camera_to_world_matrix, hit_record& rec) const {
-            /*
-            hit function. Place holder for overwriting later, sets an object as not hittable as a standard
-            wenn es später Probleme gibt wegen inclusion kreis (camera includes simple object which includes camera)
-            just give hit function the world_to_obj matrix instead of the whole camera 
-            bool hit(const ray& r, interval ray_t, const camera_old& cam, hit_record& rec) const { return false; }
-            */
+            // hit function. Place holder for overwriting later, sets an object as not hittable as a standard
             std::clog << "called base function" << std::endl;
             return false;
         }
-
 };
 
 #endif

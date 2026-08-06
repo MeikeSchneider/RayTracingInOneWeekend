@@ -1,15 +1,13 @@
 #include "rtweekend.h"
-#include "camera_old.h"
 #include "camera.h"
 #include "hittable.h"
 #include "hittable_list.h"
-#include "sphere_old.h"
-
 #include "vec4.h"
 #include "matrix.h"
 #include "simple_object.h"
 #include "sphere.h"
 #include "objects_in_scene.h"
+#include "triangle.h"
 
 void test_vectors() {
     // tests different new functionality
@@ -126,6 +124,54 @@ void test_camera() {
     std::clog << "e = " << e.obj_to_world_matrix << std::endl;
 }
 
+void test_triangle() {
+    // test basic constructor
+    triangle t = triangle(vec3(1, 1, 1), vec3(2, 2, 2), vec3(3, 3, 3));
+    std::clog << "triangle positions = " << t.get_a() << ", " << t.get_b() << ", " << t.get_c() << ", " << std::endl;
+    std::clog << "triangle matrix = " << t.obj_to_world_matrix << std::endl;
+    // test constructor with pos
+    triangle s = triangle(vec3(0, 0, 0), vec3(-2, -2, -2), vec3(3, 3, 3), vec3(1, 2, 3));
+    std::clog << "triangle positions = " << s.get_a() << ", " << s.get_b() << ", " << s.get_c() << ", " << std::endl;
+    std::clog << "triangle matrix = " << s.obj_to_world_matrix << std::endl;
+    // test constructor with pos, scale
+    triangle u = triangle(vec3(0.0, 0.5, 0), vec3(-2, -2, -2), vec3(3.2, 3.0, 3.1), vec3(1, 2, 3), vec3(2, 2, 2));
+    std::clog << "triangle positions = " << u.get_a() << ", " << u.get_b() << ", " << u.get_c() << ", " << std::endl;
+    std::clog << "triangle matrix = " << u.obj_to_world_matrix << std::endl;
+    // test constructor with pos, scale, rotations
+    triangle v = triangle(vec3(0.0, 0.5, 0), vec3(-2, -2, -2), vec3(3.2, 3.0, 3.1), vec3(1, 2, 3), vec3(2, 2, 2), 90.0, 180.0, 90.0);
+    std::clog << "triangle positions = " << v.get_a() << ", " << v.get_b() << ", " << v.get_c() << ", " << std::endl;
+    std::clog << "triangle matrix = " << v.obj_to_world_matrix << std::endl;
+}
+
+void test_triangle_hit() {
+    // test the hit function for the triangle
+    // triangle gets hit by ray, t= 5
+    triangle t = triangle(vec3(0, 0, 4), vec3(3, 0, 4), vec3(0, 3, 7));
+    ray r = ray(vec3(1, 1, 0), vec3(0, 0, 1));
+    matrix id = matrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    hit_record rect;
+    vec3 plane_normal = cross(t.get_b() - t.get_a(), t.get_c() - t.get_a());
+    std::clog << "hit example: plane normal = " << plane_normal << std::endl;
+    std::clog << "hit example: dot product plane normal, (a - ray direction) = " << dot(plane_normal, (t.get_a() - r.direction())) << std::endl;
+    std::clog << "hit example: the ray hit the plane? " << t.hit(r, interval(0, infinity), id, rect) << std::endl;
+    // triangle is paralell to ray
+    triangle s = triangle(vec3(0, 0, 4), vec3(0, 3, 4), vec3(0, 0, 7));
+    ray v = ray(vec3(1, 1, 0), vec3(0, 1, 0));
+    vec3 plane_normal_2 = cross(s.get_b() - s.get_a(), s.get_c() - s.get_a());
+    std::clog << "paralell example: plane normal = " << plane_normal_2 << std::endl;
+    std::clog << "paralell example: dot product plane normal, (a - ray direction) = " << dot(plane_normal_2, (s.get_a() - v.direction())) << std::endl;
+    std::clog << "paralell example: did the ray hit the plane? " << s.hit(v, interval(0, infinity), id, rect) << std::endl;
+    // triangle does not get hit by ray. Ray hits the plane but not the triangle
+    triangle q = triangle(vec3(0, 0, 4), vec3(3, 0, 4), vec3(0, 3, 7));
+    ray u = ray(vec3(4, 1, 0), vec3(0, 0, 1));
+    vec3 plane_normal_3 = cross(q.get_b() - q.get_a(), q.get_c() - q.get_a());
+    std::clog << "paralell example: plane normal = " << plane_normal_3 << std::endl;
+    std::clog << "paralell example: dot product plane normal, (a - ray direction) = " << dot(plane_normal_3, (q.get_a() - u.direction())) << std::endl;
+    std::clog << "paralell example: did the ray hit the plane? " << q.hit(u, interval(0, infinity), id, rect) << std::endl;
+
+    // 
+}
+
 int main() {
     objects_in_scene world;
 
@@ -143,6 +189,7 @@ int main() {
     // cam.samples_per_pixel = 100;  // normal value, send 100 rays per pixel into scene, uused for anti-aliasing
 
     // call test functions here
+    test_triangle_hit();
 
     cam.render(world);
 }
