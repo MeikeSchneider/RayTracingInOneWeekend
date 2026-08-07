@@ -145,7 +145,8 @@ void test_triangle() {
 
 void test_triangle_hit() {
     // test the hit function for the triangle
-    // triangle gets hit by ray, t= 5
+    
+    // triangle gets hit by ray, t = 5, intersection point = (1, 1, 5)
     triangle t = triangle(vec3(0, 0, 4), vec3(3, 0, 4), vec3(0, 3, 7));
     ray r = ray(vec3(1, 1, 0), vec3(0, 0, 1));
     matrix id = matrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
@@ -154,31 +155,38 @@ void test_triangle_hit() {
     std::clog << "hit example: plane normal = " << plane_normal << std::endl;
     std::clog << "hit example: dot product plane normal, (a - ray direction) = " << dot(plane_normal, (t.get_a() - r.direction())) << std::endl;
     std::clog << "hit example: the ray hit the plane? " << t.hit(r, interval(0, infinity), id, rect) << std::endl;
-    // triangle is paralell to ray
+    
+    // triangle is paralell to ray, no t, no intersection point
     triangle s = triangle(vec3(0, 0, 4), vec3(0, 3, 4), vec3(0, 0, 7));
     ray v = ray(vec3(1, 1, 0), vec3(0, 1, 0));
     vec3 plane_normal_2 = cross(s.get_b() - s.get_a(), s.get_c() - s.get_a());
     std::clog << "paralell example: plane normal = " << plane_normal_2 << std::endl;
     std::clog << "paralell example: dot product plane normal, (a - ray direction) = " << dot(plane_normal_2, (s.get_a() - v.direction())) << std::endl;
     std::clog << "paralell example: did the ray hit the plane? " << s.hit(v, interval(0, infinity), id, rect) << std::endl;
-    // triangle does not get hit by ray. Ray hits the plane but not the triangle
+    
+    // triangle does not get hit by ray. Ray hits the plane but not the triangle, t = 5, intersection point = (4, 1, 5)
     triangle q = triangle(vec3(0, 0, 4), vec3(3, 0, 4), vec3(0, 3, 7));
     ray u = ray(vec3(4, 1, 0), vec3(0, 0, 1));
     vec3 plane_normal_3 = cross(q.get_b() - q.get_a(), q.get_c() - q.get_a());
-    std::clog << "paralell example: plane normal = " << plane_normal_3 << std::endl;
-    std::clog << "paralell example: dot product plane normal, (a - ray direction) = " << dot(plane_normal_3, (q.get_a() - u.direction())) << std::endl;
-    std::clog << "paralell example: did the ray hit the plane? " << q.hit(u, interval(0, infinity), id, rect) << std::endl;
-
-    // 
+    std::clog << "plane hit example: plane normal = " << plane_normal_3 << std::endl;
+    std::clog << "plane hit example: dot product plane normal, (a - ray direction) = " << dot(plane_normal_3, (q.get_a() - u.direction())) << std::endl;
+    std::clog << "plane hit example: did the ray hit the plane? " << q.hit(u, interval(0, infinity), id, rect) << std::endl;
+    
+    // triangle gets hit by ray. Ray hits the edge of the triangle, t = 5, intersection point = (1, 1, 5)
+    triangle p = triangle(vec3(0, 0, 5), vec3(2, 0, 5), vec3(0, 2, 5));
+    ray w = ray(vec3(1, 1, 0), vec3(0, 0, 1));
+    vec3 plane_normal_4 = cross(p.get_b() - p.get_a(), p.get_c() - p.get_a());
+    std::clog << "edge hit example: plane normal = " << plane_normal_4 << std::endl;
+    std::clog << "edge hit example: dot product plane normal, (a - ray direction) = " << dot(plane_normal_4, (p.get_a() - w.direction())) << std::endl;
+    std::clog << "edge hit example: did the ray hit the plane? " << p.hit(w, interval(0, infinity), id, rect) << std::endl;
 }
 
 int main() {
     objects_in_scene world;
 
     // add sphere and "floor" to world
-    point3 sphere_center = point3(0, 0, -1.2);
-    float radius = 0.5;
-    world.add(make_shared<sphere>(sphere_center, radius));
+    // world.add(make_shared<sphere>(point3(0, 0, -1.2), 0.5)); // point, radius
+    world.add(make_shared<triangle>(point3(-1, -0.6, -3), point3(1, -0.6, -3), point3(0, 1.2, -3)));
     world.add(make_shared<sphere>(point3(0, -100.5, -1), 100));
 
     camera cam; // create camera object
@@ -189,7 +197,7 @@ int main() {
     // cam.samples_per_pixel = 100;  // normal value, send 100 rays per pixel into scene, uused for anti-aliasing
 
     // call test functions here
-    test_triangle_hit();
+    // test_triangle_hit();
 
     cam.render(world);
 }
