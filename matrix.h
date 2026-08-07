@@ -79,6 +79,7 @@ class matrix {
 };  // end of class
 
 // define operators
+
 // matrix * scalar t
 inline matrix operator*(const matrix& m, double t) {
     return matrix(m.e[0]  * t, m.e[1]  * t, m.e[2]  * t, m.e[3]  * t,
@@ -100,8 +101,7 @@ inline matrix operator/(const matrix& m, double t){
     return (1/t) * m;
 }
 
-// Matrix * vec4
-// takes matrix, vec4, gives vec4
+// matrix * vec4, takes matrix, vec4, gives vec4
 inline vec4 operator*(const matrix& m, vec4 v) {
     return vec4(m.e[0] * v.e[0] + m.e[1] * v.e[1] + m.e[2] * v.e[2] + m.e[3] * v.e[3],
                 m.e[4] * v.e[0] + m.e[5] * v.e[1] + m.e[6] * v.e[2] + m.e[7] * v.e[3],
@@ -143,6 +143,7 @@ inline matrix operator*(const matrix& m, const matrix& n) {
 }
 
 // utility functions
+
 // how to print out a matrix using iostream
 inline std::ostream& operator<<(std::ostream& out, const matrix& m) {
     return out << m.e[0]  << ' ' << m.e[1]  << ' ' << m.e[2]  << ' ' << m.e[3]  <<
@@ -151,9 +152,9 @@ inline std::ostream& operator<<(std::ostream& out, const matrix& m) {
            ' ' << m.e[12] << ' ' << m.e[13] << ' ' << m.e[14] << ' ' << m.e[15];
 }
 
+// Calculate inverse of an affine 4x4 matrix
 inline matrix invert(const matrix& m) {
 /*
-Calculate inverse of an affine 4x4 matrix
 m =
 m.e[0]  m.e[1]  m.e[2]  m.e[3]
 m.e[4]  m.e[5]  m.e[6]  m.e[7]                       

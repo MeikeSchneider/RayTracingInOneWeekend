@@ -39,9 +39,9 @@ class triangle : public simple_object {
 
         // transform the triangle vertices into camera space
         matrix obj_to_cam_matrix = invert(camera_to_world_matrix) * obj_to_world_matrix;
-        vec3 a_in_cam_space = vec4_to_vec3(obj_to_cam_matrix * vec3_to_vec4(vertex_a));
-        vec3 b_in_cam_space = vec4_to_vec3(obj_to_cam_matrix * vec3_to_vec4(vertex_b));
-        vec3 c_in_cam_space = vec4_to_vec3(obj_to_cam_matrix * vec3_to_vec4(vertex_c));
+        vec3 a_in_cam_space = vec4_to_vec3(obj_to_cam_matrix * dir3_to_vec4(vertex_a));
+        vec3 b_in_cam_space = vec4_to_vec3(obj_to_cam_matrix * dir3_to_vec4(vertex_b));
+        vec3 c_in_cam_space = vec4_to_vec3(obj_to_cam_matrix * dir3_to_vec4(vertex_c));
         // next, get the normal vector of the plane, the triangle is in
         // by getting the cross (Kreuzprodukt) of the vector from a to b and the vector from a to c
         // this vector is orthogonal to every point of the plane
