@@ -187,6 +187,7 @@ int main() {
     // add sphere and "floor" to world
     // world.add(make_shared<sphere>(point3(0, 0, -1.2), 0.5)); // point, radius
     world.add(make_shared<triangle>(point3(-1, -0.6, -3), point3(1, -0.6, -3), point3(0, 1.2, -3)));
+    // slightly slanted triangle
     // world.add(make_shared<triangle>(point3(-1, -0.6, -3), point3(0.5, -0.3, -2), point3(0, 1.2, -3)));
     // small triangle to the right of the other triangle
     // world.add(make_shared<triangle>(point3(1.6, -0.8, -3), point3(2.3, -0.8, -3), point3(1.95, -0.1, -3)));

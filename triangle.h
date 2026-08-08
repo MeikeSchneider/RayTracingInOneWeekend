@@ -40,10 +40,17 @@ class triangle : public simple_object {
         vec3 a_in_cam_space = vec4_to_vec3(obj_to_cam_matrix * pos3_to_vec4(vertex_a));
         vec3 b_in_cam_space = vec4_to_vec3(obj_to_cam_matrix * pos3_to_vec4(vertex_b));
         vec3 c_in_cam_space = vec4_to_vec3(obj_to_cam_matrix * pos3_to_vec4(vertex_c));
+
+        // calculate the edge vectors
+        vec3 edge_ab = b_in_cam_space - a_in_cam_space;
+        vec3 edge_ac = c_in_cam_space - a_in_cam_space;
+        vec3 edge_bc = c_in_cam_space - b_in_cam_space;
+        vec3 edge_ca = a_in_cam_space - c_in_cam_space;
+
         // next, get the normal vector of the plane, the triangle is in
         // by getting the cross (Kreuzprodukt) of the vector from a to b and the vector from a to c
         // this vector is orthogonal to every point of the plane
-        vec3 triangle_plane_normal = cross((b_in_cam_space - a_in_cam_space), (c_in_cam_space - b_in_cam_space));
+        vec3 triangle_plane_normal = cross(edge_ab, edge_bc);
         
         // next, check that ray and plane are not paralell
         // by checking that the dot product of the plane normal and the vector from the ray origin
@@ -66,11 +73,6 @@ class triangle : public simple_object {
             vec3 p_a = intersection - a_in_cam_space;
             vec3 p_b = intersection - b_in_cam_space;
             vec3 p_c = intersection - c_in_cam_space;
-            // calculate the edge vectors
-            vec3 edge_ab = b_in_cam_space - a_in_cam_space;
-            vec3 edge_ac = c_in_cam_space - a_in_cam_space;
-            vec3 edge_bc = c_in_cam_space - b_in_cam_space;
-            vec3 edge_ca = a_in_cam_space - c_in_cam_space;
             // calculate the cross products
             vec3 cross_1 = cross(edge_ab, p_a);
             vec3 cross_2 = cross(edge_bc, p_b);
@@ -88,14 +90,65 @@ class triangle : public simple_object {
         else { return false; }
     }
 
-    bool test(const ray& r) const {
-        return false;
-    }
-
     // hit function
     bool hit(const ray& r, interval ray_t, const matrix camera_to_world_matrix, hit_record& rec) const override {
-        // test if a ray hits the triangle
-        return my_own_hit_test(r, ray_t, camera_to_world_matrix, rec);
+        // test if a ray hits the triangle using the Möller-Trumbore-algorithm
+
+        // this is my first implementation, not using this algorithm
+        // return my_own_hit_test(r, ray_t, camera_to_world_matrix, rec);
+
+        // epsilon defined to account for floating point errors
+        constexpr float epsilon = std::numeric_limits<float>::epsilon();
+
+        // transform the triangle vertices into camera space
+        matrix obj_to_cam_matrix = invert(camera_to_world_matrix) * obj_to_world_matrix;
+        vec3 a_in_cam_space = vec4_to_vec3(obj_to_cam_matrix * pos3_to_vec4(vertex_a));
+        vec3 b_in_cam_space = vec4_to_vec3(obj_to_cam_matrix * pos3_to_vec4(vertex_b));
+        vec3 c_in_cam_space = vec4_to_vec3(obj_to_cam_matrix * pos3_to_vec4(vertex_c));
+
+        // calculate edges AB, AC, BC
+        vec3 edge_ab = b_in_cam_space - a_in_cam_space; // E1: A to B
+        vec3 edge_ac = c_in_cam_space - a_in_cam_space; // E2: A to C
+        vec3 edge_bc = c_in_cam_space - b_in_cam_space; // E3: B to C
+
+        // get normal vector of triangle plane by calculating cross product (Kreuzprodukt) of E1 and E3
+        // this vector is orthogonal to every point of the plane
+        vec3 triangle_plane_normal = cross(edge_ab, edge_bc);
+
+        // some helping vectors
+        vec3 P = cross(r.direction(), edge_ac);
+        vec3 T = r.origin() - a_in_cam_space;
+        vec3 Q = cross(T, edge_ab);
+        double det = dot(edge_ab, P);
+
+        // check if ray and triangle plane are paralell
+        if(abs(det) < epsilon) {return false;}
+        
+        // calculate u from the barycentric coordinates for a triangle:
+        // any point P on a triangle is defined as P = a + u(b-a) + v(c-a)
+        double u = (dot(T, P) / det);
+        // check that u is not smaller than 0 or bigger than 1, otherwise hit outside triangle
+        if (u < epsilon || u > 1) {return false;}
+
+        // calculate v
+        double v = (dot(r.direction(), Q)/ det);
+        // check that v is not smaller than 0 or that u+v is bigger than 1, otherwise hit outside triangle
+        if (v < epsilon || u+v > 1) {return false;}
+
+        // calculate t (point on ray where the plane is hit)
+        double t = (dot(edge_ac, Q) / det);
+        // check that t is bigger than 0, so located after the ray origin, otherwise ignore hit
+        if (t < epsilon) {return false;}
+
+        // calculate intersection point by putting t into the def for a ray = (ray.origin + t * ray.direction)
+        vec3 intersection = r.origin() + t * r.direction();
+        
+        // set hit record
+        rec.t = t;
+        rec.p = intersection;
+        vec3 outward_normal = unit_vector(cross(edge_ab, edge_ac));
+        rec.set_face_normal(r, outward_normal);
+        return true; // The point is inside the triangle!
     }
 
     private:
