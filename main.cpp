@@ -12,7 +12,7 @@
 void test_vectors() {
     // tests different new functionality
     vec3 u = vec3(1, 2, 3);
-    vec4 u_converted = dir3_to_vec4(u);
+    vec4 u_converted = pos3_to_vec4(u);
     vec4 v = vec4(3, 6, 9, 2);
     vec3 v_converted = vec4_to_vec3(v);
     std::clog << "u: " << u << ", u_converted: " << u_converted << std::endl;
@@ -187,6 +187,9 @@ int main() {
     // add sphere and "floor" to world
     // world.add(make_shared<sphere>(point3(0, 0, -1.2), 0.5)); // point, radius
     world.add(make_shared<triangle>(point3(-1, -0.6, -3), point3(1, -0.6, -3), point3(0, 1.2, -3)));
+    // world.add(make_shared<triangle>(point3(-1, -0.6, -3), point3(0.5, -0.3, -2), point3(0, 1.2, -3)));
+    // small triangle to the right of the other triangle
+    // world.add(make_shared<triangle>(point3(1.6, -0.8, -3), point3(2.3, -0.8, -3), point3(1.95, -0.1, -3)));
     world.add(make_shared<sphere>(point3(0, -100.5, -1), 100));
 
     camera cam; // create camera object

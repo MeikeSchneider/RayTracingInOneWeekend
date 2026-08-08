@@ -116,12 +116,12 @@ inline vec4 unit_vector(const vec4& v) {
 }
 
 // takes 3d vector (carthesian), returns 4d vector (homogeneous), only for positions!
-inline vec4 dir3_to_vec4(const vec3& u) {
+inline vec4 pos3_to_vec4(const vec3& u) {
     return vec4(u.x(), u.y(), u.z(), 1);
 }
 
 // takes 3d vector (carthesian), returns 4d vector (homogeneous), only for directions!
-inline vec4 pos3_to_vec4(const vec3& u) {
+inline vec4 dir3_to_vec4(const vec3& u) {
     return vec4(u.x(), u.y(), u.z(), 0);
 }
 

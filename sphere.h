@@ -28,7 +28,7 @@ class sphere : public simple_object {
             vec4 dir = vec4(r.direction().x(), r.direction().y(), r.direction().z(), 0);
             vec3 direction_in_obj_space = vec4_to_vec3(world_to_obj_matrix * (camera_to_world_matrix * dir));
             // same for origin
-            vec3 origin_in_obj_space = vec4_to_vec3(world_to_obj_matrix * (camera_to_world_matrix * dir3_to_vec4(r.origin())));
+            vec3 origin_in_obj_space = vec4_to_vec3(world_to_obj_matrix * (camera_to_world_matrix * pos3_to_vec4(r.origin())));
             // calculate t with abc formula
             vec3 C = vec3(0, 0, 0);
             double a = dot(direction_in_obj_space, direction_in_obj_space);
@@ -54,7 +54,7 @@ class sphere : public simple_object {
             }
             // calculate p = Q + t * d in object space
             vec3 p_3 = origin_in_obj_space + t_in_obj_space * direction_in_obj_space;
-            vec4 p_in_obj_space = dir3_to_vec4(p_3);
+            vec4 p_in_obj_space = pos3_to_vec4(p_3);
             // transform p back into camera space
             vec3 p_in_cam_space = vec4_to_vec3(invert(camera_to_world_matrix) * (obj_to_world_matrix * p_in_obj_space));
             // recalculate t in cam space with p = Q + t * d ( with vars in cam space)
@@ -64,7 +64,7 @@ class sphere : public simple_object {
             rec.p = p_in_cam_space;
             // p in obj space, transformed as a direction into camera space
             // vec4 p_normal_in_obj_space = vec4(p_3.x(), p_3.y(), p_3.z(), 0);
-            vec4 p_normal_in_obj_space = pos3_to_vec4(p_3);
+            vec4 p_normal_in_obj_space = dir3_to_vec4(p_3);
             vec3 p_normal_in_cam_space = vec4_to_vec3(invert(camera_to_world_matrix) * (obj_to_world_matrix * p_normal_in_obj_space));
             // outward_normal is normalized p in camera space
             vec3 outward_normal = unit_vector(p_normal_in_cam_space);
