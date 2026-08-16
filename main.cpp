@@ -183,12 +183,29 @@ void test_triangle_hit() {
 }
 
 void test_triangle_mesh() {
+    // first constructor
     std::vector<vec3> vertex_list = {vec3(0, 0, 5), vec3(2, 0, 5), vec3(0, 2, 5)};
     std::vector<int> triangle_list = {0, 1, 2};
     triangle_mesh m = triangle_mesh(vertex_list, triangle_list);
     std::clog << "vertex_list = " << vertex_list << std::endl;
     std::clog << "triangle_list = " << triangle_list << std::endl;
+    std::clog << "obj_to_world_matrix1 = " << m.obj_to_world_matrix << std::endl;
     
+    // test getters
+    std::clog << "vertices: " << m.get_vertices() << std::endl;
+    std::clog << "triangles: " << m.get_triangles() << std::endl;
+
+    // second constructor
+    triangle_mesh n = triangle_mesh(vertex_list, triangle_list, vec3(1, 2, 3));
+    std::clog << "obj_to_world_matrix2 = " << n.obj_to_world_matrix << std::endl;
+
+    // third constructor
+    triangle_mesh o = triangle_mesh(vertex_list, triangle_list, vec3(1, 2, 3), vec3(4, 5, 6));
+    std::clog << "obj_to_world_matrix3 = " << o.obj_to_world_matrix << std::endl;
+
+    // fourth constructor
+    triangle_mesh p = triangle_mesh(vertex_list, triangle_list, vec3(1, 2, 3), vec3(4, 5, 6), 90.0, 180.0, 90.0);
+    std::clog << "obj_to_world_matrix4 = " << p.obj_to_world_matrix << std::endl;
 }
 
 int main() {

@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "simple_object.h"
+#include "vec3.h"
 
 class triangle_mesh : public simple_object {
     public:
@@ -32,32 +33,14 @@ class triangle_mesh : public simple_object {
     // utility functions:
     // vertices.size() gives amount of triangles, triangles.size() gives number of vertices, so extra function needed
 
-    // add triangles to the vertices and the triangles lists
-    // wenn man Dreiecke einließt, können diese Funktionen benutzt werden, um nach und nach Dreiecke zu vertices und triangles hinzuzufügen 
-    void add_vertices(vec3 vertex) { vertices.push_back(vertex); }
-    void add_triangles(int index_a, int index_b, int index_c) {
-        triangles.push_back(index_a);
-        triangles.push_back(index_b);
-        triangles.push_back(index_c);
-    }
-    
-    // clear the vertices and triangles lists
-    void clear_vertices() { vertices.clear(); }
-    void clear_triangles() { triangles.clear(); }
-
-    // possible TODO: add a function to add lists of vertives/ triangles?
-
-    // possible TODO: define how to print out the object? (if I can't print out a mesh while testing, it's needed)
-    // inline std::ostream& operator<<(std::ostream& out, const vec4& v) {
-    // return out << v.e[0] << ' ' << v.e[1] << ' ' << v.e[2] << ' ' << v.e[3];
-    // }
+    // when reading in triangles: triangles can be added with vertices.push_back(); 
+    // indices for triangles have to be calculated 
+    // vertices and triangles lists can be cleared using vertices.clear(); and triangles.clear();
 
     // hit function
     // TODO
 
     private:
-    // definition of triangle mesh:
-    
     // list of coordinates (vec3) of vertices (Ecken) that stores the coordinates of the vertices of the triangles
     std::vector<vec3> vertices;
     // list of triangles that stores the indices of where in vertices the edges are
