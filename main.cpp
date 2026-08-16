@@ -8,6 +8,7 @@
 #include "sphere.h"
 #include "objects_in_scene.h"
 #include "triangle.h"
+#include "triangle_mesh.h"
 
 void test_vectors() {
     // tests different new functionality
@@ -181,6 +182,15 @@ void test_triangle_hit() {
     std::clog << "edge hit example: did the ray hit the plane? " << p.hit(w, interval(0, infinity), id, rect) << std::endl;
 }
 
+void test_triangle_mesh() {
+    std::vector<vec3> vertex_list = {vec3(0, 0, 5), vec3(2, 0, 5), vec3(0, 2, 5)};
+    std::vector<int> triangle_list = {0, 1, 2};
+    triangle_mesh m = triangle_mesh(vertex_list, triangle_list);
+    std::clog << "vertex_list = " << vertex_list << std::endl;
+    std::clog << "triangle_list = " << triangle_list << std::endl;
+    
+}
+
 int main() {
     objects_in_scene world;
 
@@ -201,7 +211,7 @@ int main() {
     // cam.samples_per_pixel = 100;  // normal value, send 100 rays per pixel into scene, uused for anti-aliasing
 
     // call test functions here
-    // test_triangle_hit();
+    test_triangle_mesh();
 
     cam.render(world);
 }

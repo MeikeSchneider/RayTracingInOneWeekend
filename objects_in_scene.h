@@ -2,6 +2,7 @@
 #define OBJECTS_IN_SCENE_H
 
 #include "simple_object.h"
+#include "matrix.h"
 #include <memory>
 #include <vector>
 
@@ -21,14 +22,15 @@ class objects_in_scene {
         objects.push_back(object);
     }
 
-    bool hit(const ray& r, interval ray_t, hit_record& rec) const {
+    bool hit(const ray& r, interval ray_t, matrix cam_to_world_matrix, hit_record& rec) const {
         hit_record temp_rec;
         bool hit_anything = false;
         auto closest_so_far = ray_t.max;
         // iterate through list of objects with interation object "object"
         for (const auto& object : objects) {
             // "->"" is dereferencing
-            if (object->hit(r, interval(ray_t.min, closest_so_far), matrix(), temp_rec)) {
+            if (object->hit(r, interval(ray_t.min, closest_so_far), cam_to_world_matrix, temp_rec)) {
+                // wenn if statement true zurück liefert wurde etwas getroffen und der hit aufruf hat etw in temp_rec geschrieben.
                 // std::clog << "hit detected" << std::endl;
                 if (temp_rec.t < closest_so_far) {
                     hit_anything = true;

@@ -5,8 +5,8 @@
 #include "vec3.h"
 #include "ray.h"
 #include "interval.h"
-#include "camera_old.h"
-// #include "camera.h"
+#include "camera.h"
+#include "hittable.h"
 
 class simple_object {
     /*
@@ -20,8 +20,8 @@ class simple_object {
         // Matrix always represents the transformation from object space to world space
         matrix obj_to_world_matrix;
     
+        // empty constructor: identity matrix
         simple_object() {
-            // empty constructor: identity matrix
             obj_to_world_matrix = matrix(
             1, 0, 0, 0,
             0, 1, 0, 0, 
@@ -29,41 +29,41 @@ class simple_object {
             0, 0, 0, 1);
         }
 
+        // constructor with translation
         simple_object(vec3 translation) {
-            // constructor with translation
             obj_to_world_matrix = matrix::Translation(translation);
         }
 
+        // constructor with translation and scale given
         simple_object(vec3 translation, vec3 scale) {
-            // constructor with translation and scale given
             obj_to_world_matrix = matrix::Translation(translation) * matrix::Scale(scale);
         }
 
+        /* 
+        constructor, with all values given
+        generates the matrices out of the values given, combines them into one matrix.
+        order of operation: rotation: z * y * x
+        everyting: scale * rotation * translation  */
         simple_object(vec3 translation, vec3 scale, float xRotation, float yRotation, float zRotation) {
-            /* constructor, with all values given
-            generates the matrices out of the values given, combines them into one matrix.
-            order of operation:
-            rotation: z * y * x
-            everyting: scale * rotation * translation  */
             matrix rotation = matrix::ZRotation(zRotation) * (matrix::YRotation(yRotation) * matrix::XRotation(xRotation));
             obj_to_world_matrix = matrix::Translation(translation) * (rotation *  matrix::Scale(scale));
         } 
         
+        // takes in a position that should be added to the current position, makes a translation matrix out of it
+        // and multiplies that with the matrix
         void move(const vec3& position) {
-            // takes in a position that should be added to the current position, makes a translation matrix out of it
-            // and multiplies that with the matrix
             obj_to_world_matrix = matrix::Translation(position) * obj_to_world_matrix;
         }
 
+        // takes in a pos where the object should be moved to, overwrites the enties of the matrix
         void place(const vec3& position) {
-            // takes in a pos where the object should be moved to, overwrites the enties of the matrix
             obj_to_world_matrix.e[3]  = position.x();
             obj_to_world_matrix.e[7]  = position.y();
             obj_to_world_matrix.e[11] = position.z();
         }
 
+        // hit function. Place holder for overwriting later, sets an object as not hittable as a standard
         virtual bool hit(const ray& r, interval ray_t, const matrix camera_to_world_matrix, hit_record& rec) const {
-            // hit function. Place holder for overwriting later, sets an object as not hittable as a standard
             std::clog << "called base function" << std::endl;
             return false;
         }

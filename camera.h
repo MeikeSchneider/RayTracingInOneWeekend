@@ -8,6 +8,7 @@
 #include "color.h"
 #include "simple_object.h"
 #include "objects_in_scene.h"
+#include "hittable.h"
 
 class camera : public simple_object {
     public:
@@ -131,7 +132,7 @@ class camera : public simple_object {
         // if stuff in the world is hit:
         // 1. world.hit writes hits into hit record, returns True
         // 2. and returns Color based on information in hit record
-        if (world.hit(r, interval(0, infinity), rec)) {
+        if (world.hit(r, interval(0, infinity), obj_to_world_matrix, rec)) {
             // takes the normal vector from hit record, adds (1, 1, 1), multiplies by 0.5
             // (is done to scale numbers from -1, 1 to 0, 1)
             // add phong here
