@@ -90,10 +90,8 @@ class triangle : public simple_object {
         else { return false; }
     }
 
-    // hit function
+    // hit function: test if a ray hits the triangle using the Möller-Trumbore-algorithm
     bool hit(const ray& r, interval ray_t, const matrix camera_to_world_matrix, hit_record& rec) const override {
-        // test if a ray hits the triangle using the Möller-Trumbore-algorithm
-
         // this is my first implementation, not using this algorithm
         // return my_own_hit_test(r, ray_t, camera_to_world_matrix, rec);
 
@@ -144,8 +142,8 @@ class triangle : public simple_object {
         vec3 intersection = r.origin() + t * r.direction();
         
         // set hit record
-        rec.t = t;
-        rec.p = intersection;
+        rec.t = t; // t from ray equation, needed for insection calculation
+        rec.p = intersection; // actual intersection point
         vec3 outward_normal = unit_vector(cross(edge_ab, edge_ac));
         rec.set_face_normal(r, outward_normal);
         return true; // The point is inside the triangle!

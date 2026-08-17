@@ -28,7 +28,7 @@ class objects_in_scene {
         auto closest_so_far = ray_t.max;
         // iterate through list of objects with interation object "object"
         for (const auto& object : objects) {
-            // "->"" is dereferencing
+            // "->"" is dereferencing, needed because of smart pointer
             if (object->hit(r, interval(ray_t.min, closest_so_far), cam_to_world_matrix, temp_rec)) {
                 // wenn if statement true zurück liefert wurde etwas getroffen und der hit aufruf hat etw in temp_rec geschrieben.
                 // std::clog << "hit detected" << std::endl;

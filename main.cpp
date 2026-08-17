@@ -208,16 +208,67 @@ void test_triangle_mesh() {
     std::clog << "obj_to_world_matrix4 = " << p.obj_to_world_matrix << std::endl;
 }
 
+void test_mesh_hit() {
+    // triangle gets hit by ray, t = 5, intersection point = (1, 1, 5)
+    std::vector<vec3> vertex_list = {vec3(0, 0, 4), vec3(3, 0, 4), vec3(0, 3, 7)};
+    std::vector<int> triangle_list = {0, 1, 2};
+    triangle_mesh t = triangle_mesh(vertex_list, triangle_list);
+    ray r = ray(vec3(1, 1, 0), vec3(0, 0, 1));
+    matrix id = matrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    hit_record rect;
+    std::clog << "hit example: the ray hit the plane? " << t.hit(r, interval(0, infinity), id, rect) << std::endl;
+
+    // triangle is paralell to ray, no t, no intersection point
+    vertex_list = {vec3(0, 0, 4), vec3(0, 3, 4), vec3(0, 0, 7)};
+    t = triangle_mesh(vertex_list, triangle_list);
+    ray v = ray(vec3(1, 1, 0), vec3(0, 1, 0));
+    std::clog << "paralell example: did the ray hit the plane? " << t.hit(v, interval(0, infinity), id, rect) << std::endl;
+    
+    // triangle does not get hit by ray. Ray hits the plane but not the triangle, t = 5, intersection point = (4, 1, 5)
+    vertex_list = {vec3(0, 0, 4), vec3(3, 0, 4), vec3(0, 3, 7)};
+    t = triangle_mesh(vertex_list, triangle_list);
+    ray u = ray(vec3(4, 1, 0), vec3(0, 0, 1));
+    std::clog << "plane hit example: did the ray hit the plane? " << t.hit(u, interval(0, infinity), id, rect) << std::endl;
+    
+    // triangle gets hit by ray. Ray hits the edge of the triangle, t = 5, intersection point = (1, 1, 5)
+    vertex_list = {vec3(0, 0, 5), vec3(2, 0, 5), vec3(0, 2, 5)};
+    t = triangle_mesh(vertex_list, triangle_list);
+    ray w = ray(vec3(1, 1, 0), vec3(0, 0, 1));
+    std::clog << "edge hit example: did the ray hit the plane? " << t.hit(w, interval(0, infinity), id, rect) << std::endl;
+
+    // more triangles get hit by ray. Intersections: (2/3, 2/3, 2/3), 
+    vertex_list = {vec3(2, 0, 0), vec3(0, 2, 0), vec3(0, 0, 2), // intersection: (2/3, 2/3, 2/3) 0,66666
+                   vec3(5, 1, 1), vec3(1, 5, 1), vec3(1, 1, 5), // intersection: (7/3, 7/3, 7/3) 2,33333
+                   vec3(8, 2, 2), vec3(2, 8, 2), vec3(2, 2, 8)};// intersection: (4, 4, 4)
+    triangle_list = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+    t = triangle_mesh(vertex_list, triangle_list);
+    ray x = ray(vec3(0, 0, 0), vec3(1, 1, 1));
+    std::clog << "edge hit example: did the ray hit the plane? " << t.hit(x, interval(0, infinity), id, rect) << std::endl;
+}
+
 int main() {
     objects_in_scene world;
-
-    // add sphere and "floor" to world
+    // add sphere to the world
     // world.add(make_shared<sphere>(point3(0, 0, -1.2), 0.5)); // point, radius
-    world.add(make_shared<triangle>(point3(-1, -0.6, -3), point3(1, -0.6, -3), point3(0, 1.2, -3)));
-    // slightly slanted triangle
-    // world.add(make_shared<triangle>(point3(-1, -0.6, -3), point3(0.5, -0.3, -2), point3(0, 1.2, -3)));
-    // small triangle to the right of the other triangle
-    // world.add(make_shared<triangle>(point3(1.6, -0.8, -3), point3(2.3, -0.8, -3), point3(1.95, -0.1, -3)));
+    
+    // add a triangle to the world
+    // world.add(make_shared<triangle>(point3(-1, -0.6, -3), point3(1, -0.6, -3), point3(0, 1.2, -3)));
+
+    // add a simple triangle mesh consisting of one triangle to the world
+    // std::vector<vec3> vertex_list = {point3(-1, -0.6, -3), point3(1, -0.6, -3), point3(-1, 1.2, -3), point3(1, 1.2, -3)};
+    std::vector<vec3> vertex_list = {point3(-2, -0.6, -3), point3(-2, 1.8, -3), point3(-1, -0.6, -3),
+                                     point3(-1, 1.2, -3), point3(1, -0.6, -3), point3(1, 1.2, -3),
+                                     point3(2, -0.6, -3), point3(2, 1.8, -3)};
+    // std::vector<int> triangle_list = {0, 1, 2, 1, 2, 3};
+    std::vector<int> triangle_list = {0, 1, 2, 
+                                      1, 2, 3,
+                                      2, 3, 4,
+                                      3, 4, 5,
+                                      4, 5, 6,
+                                      5, 6, 7};
+    world.add(make_shared<triangle_mesh>(vertex_list, triangle_list));
+    
+    // add "floor" to the world
     world.add(make_shared<sphere>(point3(0, -100.5, -1), 100));
 
     camera cam; // create camera object
@@ -228,7 +279,8 @@ int main() {
     // cam.samples_per_pixel = 100;  // normal value, send 100 rays per pixel into scene, uused for anti-aliasing
 
     // call test functions here
-    test_triangle_mesh();
+    // test_triangle_mesh();
+    // test_mesh_hit();
 
     cam.render(world);
 }
