@@ -28,13 +28,6 @@ class triangle_mesh : public simple_object {
         float xRotation, float yRotation, float zRotation
         ) : simple_object(translation, scale, xRotation, yRotation, zRotation
         ), vertices(vertex_list), triangles(triangle_list) {}
-    
-    // utility functions:
-    // vertices.size() gives amount of triangles, triangles.size() gives number of vertices, so extra function needed
-
-    // when reading in triangles: triangles can be added with vertices.push_back(); 
-    // indices for triangles have to be calculated 
-    // vertices and triangles lists can be cleared using vertices.clear(); and triangles.clear();
 
     // hit function: test for all triangles of the mesh if the ray hits it
     // Uses the Möller-Trumbore-algorithm, expanded for meshes
@@ -56,11 +49,6 @@ class triangle_mesh : public simple_object {
             vec3 vertex_b = vertices[triangles[i+1]];
             vec3 vertex_c = vertices[triangles[i+2]];
 
-            // std::clog << "i = " << i << ", vertex_a = " << vertex_a << std::endl;
-            // std::clog << "i+1 = " << i+1 << ", vertex_b = " << vertex_b << std::endl;
-            // std::clog << "i+2 = " << i+2 << ", vertex_c = " << vertex_c << std::endl;
-
-            // 2. transform the three points like with the one-triangle-algorithm into cam space
             matrix obj_to_cam_matrix = invert(camera_to_world_matrix) * obj_to_world_matrix;
             // transform the triangle vertices into camera space
             vec3 a_in_cam_space = vec4_to_vec3(obj_to_cam_matrix * pos3_to_vec4(vertex_a));

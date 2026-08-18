@@ -1,5 +1,6 @@
 *.[oa]
 *.exe
 notizen.txt
-notizen2.txt
+notizenC++.txt
+notizenObj.txt
 .vscode/

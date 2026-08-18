@@ -1,10 +1,11 @@
 #include "rtweekend.h" // general main header file
 #include "camera.h"
 #include "simple_object.h" // included for testing
-#include "objects_in_scene.h" // included for what objects are in the world
+#include "objects_in_scene.h" // included for "what objects are in the world"
 #include "geometry/sphere.h" // included for "floor"
 #include "geometry/triangle.h" // included for testing
 #include "geometry/triangle_mesh.h" // needed for meshes
+#include "obj_loader.h" // to load in .obj files
 
 void test_vectors() {
     // tests different new functionality
@@ -242,6 +243,12 @@ void test_mesh_hit() {
     std::clog << "edge hit example: did the ray hit the plane? " << t.hit(x, interval(0, infinity), id, rect) << std::endl;
 }
 
+void test_obj_loader() {
+    obj_loader loader;
+    loader.load("obj_files/cube.obj");
+    // std::clog << "result = " << result << std::endl;
+}
+
 int main() {
     objects_in_scene world;
     // add sphere to the world
@@ -256,12 +263,8 @@ int main() {
                                      point3(-1, 1.2, -3), point3(1, -0.6, -3), point3(1, 1.2, -3),
                                      point3(2, -0.6, -3), point3(2, 1.8, -3)};
     // std::vector<int> triangle_list = {0, 1, 2, 1, 2, 3};
-    std::vector<int> triangle_list = {0, 1, 2, 
-                                      1, 2, 3,
-                                      2, 3, 4,
-                                      3, 4, 5,
-                                      4, 5, 6,
-                                      5, 6, 7};
+    std::vector<int> triangle_list = {0, 1, 2, 1, 2, 3, 2, 3, 4,
+                                      3, 4, 5, 4, 5, 6, 5, 6, 7};
     world.add(make_shared<triangle_mesh>(vertex_list, triangle_list));
     
     // add "floor" to the world
@@ -272,12 +275,13 @@ int main() {
     cam.aspect_ratio = 16.0 / 9.0;  // image width to image height is 16:9 
     cam.image_width  = 400;
     cam.samples_per_pixel = 1;  // // set this to 1 for testing!
-    // cam.samples_per_pixel = 100;  // normal value, send 100 rays per pixel into scene, uused for anti-aliasing
+    // cam.samples_per_pixel = 100;  // normal value, send 100 rays per pixel into scene, used for anti-aliasing
 
     // call test functions here
     // test_triangle();
     // test_triangle_mesh();
     // test_mesh_hit();
+    test_obj_loader();
 
     cam.render(world);
 }
