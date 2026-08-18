@@ -14,7 +14,7 @@ using std::make_shared;
 using std::shared_ptr;
 
 // Constants
-const double infinity = std::numeric_limits<double>::infinity();
+// const double infinity = std::numeric_limits<double>::infinity(); // moved into interval.h due to include errors
 const double pi = 3.1415926535897932385;
 
 // Utility Functions
@@ -35,11 +35,11 @@ inline double random_double(double min, double max) {
 }
 
 // Common Headers
+#include "math/interval.h"
+#include "math/vec3.h"
+#include "math/vec4.h"
+#include "math/matrix.h"
 #include "color.h"
-#include "interval.h"
 #include "ray.h"
-#include "vec3.h"
-#include "vec4.h"
-#include "matrix.h"
 
 #endif

@@ -1,9 +1,15 @@
 #ifndef INTERVAL_H
 #define INTERVAL_H
-
+/*
+number range tool.
+In the ray tracer, it is mainly used to define which t values along a ray count as valid hits.
+Provided functionality:
+    - define intervals in which we want to check or accept results
+    - check if a value is inside an interval, including or excluding boundaries
+    - clamp numbers to certain ranges
+*/ 
 #include <cmath>
-
-// const double infinity = std::numeric_limits<double>::infinity();
+const double infinity = std::numeric_limits<double>::infinity();
 
 class interval {
   public:
@@ -17,10 +23,12 @@ class interval {
         return max - min;
     }
 
+    // check if a number x is within the interval (min, max), including min and max
     bool contains(double x) const {
         return min <= x && x <= max;
     }
 
+    // check if a number is within the interval (min, max), excluding min and max
     bool surrounds(double x) const {
         return min < x && x < max;
     }

@@ -1,10 +1,10 @@
 #include "rtweekend.h" // general main header file
 #include "camera.h"
 #include "simple_object.h" // included for testing
-#include "sphere.h" // included for "floor"
 #include "objects_in_scene.h" // included for what objects are in the world
-#include "triangle.h" // included for testing
-#include "triangle_mesh.h" // needed for meshes
+#include "geometry/sphere.h" // included for "floor"
+#include "geometry/triangle.h" // included for testing
+#include "geometry/triangle_mesh.h" // needed for meshes
 
 void test_vectors() {
     // tests different new functionality
@@ -275,6 +275,7 @@ int main() {
     // cam.samples_per_pixel = 100;  // normal value, send 100 rays per pixel into scene, uused for anti-aliasing
 
     // call test functions here
+    // test_triangle();
     // test_triangle_mesh();
     // test_mesh_hit();
 

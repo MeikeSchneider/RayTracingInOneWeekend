@@ -1,8 +1,8 @@
 #ifndef COLOR_H
 #define COLOR_H
 
-#include "vec3.h"
-#include "interval.h"
+#include "math/vec3.h"
+#include "math/interval.h"
 
 using color = vec3;  // color is just a vec3 with rgb values
 

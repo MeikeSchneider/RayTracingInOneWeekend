@@ -2,7 +2,7 @@
 #define TRIANGLE_MESH_H
 
 #include <vector>
-#include "simple_object.h"
+#include "../simple_object.h"
 
 class triangle_mesh : public simple_object {
     public:
