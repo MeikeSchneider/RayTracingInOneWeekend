@@ -3,7 +3,6 @@
 
 #include <vector>
 #include "simple_object.h"
-#include "vec3.h"
 
 class triangle_mesh : public simple_object {
     public:

@@ -1,14 +1,10 @@
-#include "rtweekend.h"
+#include "rtweekend.h" // general main header file
 #include "camera.h"
-#include "hittable.h"
-#include "hittable_list.h"
-#include "vec4.h"
-#include "matrix.h"
-#include "simple_object.h"
-#include "sphere.h"
-#include "objects_in_scene.h"
-#include "triangle.h"
-#include "triangle_mesh.h"
+#include "simple_object.h" // included for testing
+#include "sphere.h" // included for "floor"
+#include "objects_in_scene.h" // included for what objects are in the world
+#include "triangle.h" // included for testing
+#include "triangle_mesh.h" // needed for meshes
 
 void test_vectors() {
     // tests different new functionality

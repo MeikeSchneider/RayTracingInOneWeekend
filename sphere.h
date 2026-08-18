@@ -2,7 +2,6 @@
 #define SPHERE_H
 
 #include "simple_object.h"
-// #include "camera_old.h"
 
 class sphere : public simple_object {
     // simple_object is base class for sphere, constructors of simple_objects are base conatructors

@@ -2,9 +2,6 @@
 #define OBJECTS_IN_SCENE_H
 
 #include "simple_object.h"
-#include "matrix.h"
-#include <memory>
-#include <vector>
 
 using std::make_shared;
 using std::shared_ptr;  // does memory management automatically so we don't need to worry about it

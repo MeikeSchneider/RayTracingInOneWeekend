@@ -1,14 +1,8 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include <vector>
-#include <iostream>
-#include <cmath>
-
-#include "color.h"
 #include "simple_object.h"
 #include "objects_in_scene.h"
-#include "hittable.h"
 
 class camera : public simple_object {
     public:

@@ -1,10 +1,7 @@
 #ifndef SIMPLE_OBJECT_H
 #define SIMPLE_OBJECT_H
 
-#include "matrix.h"
-#include "vec3.h"
-#include "ray.h"
-#include "interval.h"
+#include "rtweekend.h"
 #include "camera.h"
 #include "hittable.h"
 

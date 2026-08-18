@@ -6,6 +6,7 @@
 #include <iostream>
 #include <limits>
 #include <memory>
+#include <vector>
 
 
 // C++ Std Usings
@@ -38,5 +39,7 @@ inline double random_double(double min, double max) {
 #include "interval.h"
 #include "ray.h"
 #include "vec3.h"
+#include "vec4.h"
+#include "matrix.h"
 
 #endif
