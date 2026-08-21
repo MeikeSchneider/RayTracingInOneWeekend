@@ -43,4 +43,18 @@ void test_matrix() {
     vec4 v = vec4(1, 2, 3, 4);
     vec4 w = D * v;
     assert(w == vec4(10, 20, 30, 40));
+
+    // Tests for invert(matrix)
+    A = matrix(1, 0, 0, 5,
+                0, 1, 0, -3,
+                0, 0, 1, 8, 
+                0, 0, 0, 1);
+    matrix A_inv = matrix(1, 0, 0, -5, 0, 1, 0, 3, 0, 0, 1, -8, 0, 0, 0, 1);
+    assert(invert(A) == A_inv);
+    B = {7, 2, 1, 0,
+        0, 3, -1, 0,
+        -3, 4, -2, 0,
+        0, 0, 0, 1};
+    matrix B_inv = matrix(-2, 8, -5, -0, 3, -11, 7, -0, 9, -34, 21, -0, 0, 0, 0, 1);
+    assert(invert(B) == B_inv);
 }

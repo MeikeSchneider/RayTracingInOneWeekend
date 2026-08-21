@@ -7,65 +7,6 @@
 #include "geometry/triangle_mesh.h" // needed for meshes
 #include "obj_loader.h" // to load in .obj files
 
-void test_matrices() {
-    // test that empty constructor makes identity matrix
-    matrix m = matrix();
-    std::clog << "m: " << m << std::endl;
-    // test that multiplication with a scalar works
-    matrix n = matrix() * 5;
-    std::clog << "n: " << n << std::endl;
-    // test that constructor with values in it works
-    matrix o = matrix(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16);
-    std::clog << "o: " << o << std::endl;
-    o = o * 2;
-    std::clog << "o*2: " << o << std::endl;
-    // test that constructor with values in a list works
-    double lst[16] = {3, 3, 3, 6, 6, 6, 9, 9, 9, 10, 11, 12, 13, 14, 15, 16};
-    matrix p = matrix(lst);
-    std::clog << "p: " << p << std::endl;
-    // dividing by a scalar should work too
-    p = p / 3;
-    std::clog << "3*p: " << p << std::endl;
-    // matrix multiplication
-    matrix A = matrix(1, 2, 0, 1, 3, 0, 1, 2, 1, 1, 2, 0, 0, 2, 1, 1);
-    matrix B = matrix(1, 0, 2, 1, 2, 1, 0, 1, 0, 2, 1, 2, 1, 0, 1, 0);
-    matrix C = A * B;
-    std::clog << "A*B: " << C << std::endl;
-    // test matrix * vector 
-    matrix D = matrix(1, 1, 1, 1, 
-                       2, 2, 2, 2, 
-                       3, 3, 3, 3, 
-                       4, 4, 4, 4);
-    vec4 v = vec4(1, 2, 3, 4);
-    vec4 w = D * v;
-    std::clog << "D*v: " << w << std::endl;
-}
-
-void test_matrix_invert() {
-    // Tests for invert(matrix)
-    matrix A = matrix(1, 0, 0, 5,
-                      0, 1, 0, -3,
-                      0, 0, 1, 8, 
-                      0, 0, 0, 1);
-    std::clog << "invert(A) = " << invert(A) << std::endl;
-    matrix B = {7, 2, 1, 0,
-                0, 3, -1, 0,
-                -3, 4, -2, 0,
-                0, 0, 0, 1};
-    std::clog << "invert(B) = " << invert(B) << std::endl;
-
-    // test for Translation matrix
-    // std::clog << "Translation matrix = " << matrix::Translation(vec3(1, 2, 3)) << std::endl;
-    // test for Scale matrix
-    // std::clog << "Scale matrix = " << matrix::Scale(vec3(1, 2, 3)) << std::endl;
-    // test for XRotation matrix
-    // std::clog << "XRotation matrix = " << matrix::XRotation(90) << std::endl;
-    // test for YRotation matrix
-    // std::clog << "YRotation matrix = " << matrix::YRotation(90) << std::endl;
-    // test for ZRotation matrix
-    // std::clog << "ZRotation matrix = " << matrix::ZRotation(90) << std::endl;
-}
-
 void test_simple_obj() {
     // test the empty constructor
     simple_object obj_1 = simple_object();
@@ -236,7 +177,13 @@ void test_mesh_hit() {
 void test_obj_loader() {
     obj_loader loader;
     loader.load("obj_files/cube.obj");
-    // std::clog << "result = " << result << std::endl;
+    std::clog << "vertices_lst = " << loader.get_vertices_lst() << std::endl;
+    std::clog << "normals_lst = " << loader.get_normals_lst() << std::endl;
+    std::clog << "texCoods_lst = " << loader.get_texCoords_lst() << std::endl;
+    std::clog << "faces_lst = " << loader.get_faces_lst() << std::endl;
+    triangle_mesh m = make_triangle_mesh(loader);
+    std::clog << "m.vertices = " << m.get_vertices() << std::endl;
+    std::clog << "m.triangles = " << m.get_triangles() << std::endl;
 }
 
 int main() {
@@ -255,10 +202,17 @@ int main() {
     // std::vector<int> triangle_list = {0, 1, 2, 1, 2, 3};
     std::vector<int> triangle_list = {0, 1, 2, 1, 2, 3, 2, 3, 4,
                                       3, 4, 5, 4, 5, 6, 5, 6, 7};
-    world.add(make_shared<triangle_mesh>(vertex_list, triangle_list));
+    // world.add(make_shared<triangle_mesh>(vertex_list, triangle_list));
     
     // add "floor" to the world
     world.add(make_shared<sphere>(point3(0, -100.5, -1), 100));
+    
+    // add triangle mesh read from obj file to world
+    obj_loader loader;
+    loader.load("obj_files/cube.obj");
+    triangle_mesh m = make_triangle_mesh(loader);
+    triangle_mesh n = triangle_mesh(m.get_vertices(), m.get_triangles(), vec3(0, 0, -3));
+    world.add(make_shared<triangle_mesh>(n));
 
     camera cam; // create camera object
 
@@ -271,7 +225,7 @@ int main() {
     // test_triangle();
     // test_triangle_mesh();
     // test_mesh_hit();
-    test_obj_loader();
+    // test_obj_loader();
 
     cam.render(world);
 }

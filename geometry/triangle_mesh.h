@@ -7,9 +7,12 @@
 class triangle_mesh : public simple_object {
     public:
     // getters for private variable vertices
-    std::vector<vec3> get_vertices() { return vertices; }
+    // use reference to avoid unneccessary copying
+    const std::vector<vec3>& get_vertices() const { return vertices; }
+    // old getter: std::vector<vec3> get_vertices() { return vertices; }
     // getters for private variable triangles
-    std::vector<int> get_triangles() { return triangles; }
+    const std::vector<int>& get_triangles() const { return triangles; }
+    // std::vector<int> get_triangles() { return triangles; }
     
     // basic constructor that sets only vertices and triangles
     triangle_mesh(std::vector<vec3> vertex_list, std::vector<int> triangle_list
@@ -41,7 +44,7 @@ class triangle_mesh : public simple_object {
         vec3 temp_outward_normal;
         
         // check that the size of triangles is divisible by 3
-        if (triangles.size() % 3 != 0) { return false; }
+        // if (triangles.size() % 3 != 0) { return false; }
         
         // iterate through triangles in steps of size 3. Take the indices and look up the coordinates in vertices
         for (int i = 0; i < triangles.size(); i=i+3) {
