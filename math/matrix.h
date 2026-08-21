@@ -142,6 +142,16 @@ inline matrix operator*(const matrix& m, const matrix& n) {
     */
 }
 
+// how to compare two matrices
+inline bool operator==(const matrix& m, const matrix& n) {
+    for (int i = 0; i < 16; i++) {
+        if (m.e[i] != n.e[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
 // utility functions
 
 // how to print out a matrix using iostream

@@ -7,16 +7,6 @@
 #include "geometry/triangle_mesh.h" // needed for meshes
 #include "obj_loader.h" // to load in .obj files
 
-void test_vectors() {
-    // tests different new functionality
-    vec3 u = vec3(1, 2, 3);
-    vec4 u_converted = pos3_to_vec4(u);
-    vec4 v = vec4(3, 6, 9, 2);
-    vec3 v_converted = vec4_to_vec3(v);
-    std::clog << "u: " << u << ", u_converted: " << u_converted << std::endl;
-    std::clog << "v: " << v << ", v_converted: " << v_converted << std::endl;
-}
-
 void test_matrices() {
     // test that empty constructor makes identity matrix
     matrix m = matrix();

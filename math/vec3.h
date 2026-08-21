@@ -2,6 +2,7 @@
 #define VEC3_H
 
 #include <cmath>
+#include <iostream>
 
 class vec3 {
   public:
@@ -68,6 +69,15 @@ using point3 = vec3;
 inline std::ostream& operator<<(std::ostream& out, const vec3& v) {
     // old: return out << v.e[0] << ' ' << v.e[1] << ' ' << v.e[2];
     return out << "(" << v.e[0] << ", " << v.e[1] << ", " << v.e[2] << ")";
+}
+
+inline bool operator==(vec3 u, vec3 v) {
+    for (int i = 0; i < 3; i++) {
+        if (u.e[i] != v.e[i]) {
+            return false;
+        }
+    }
+    return true;
 }
 
 inline vec3 operator+(const vec3& u, const vec3& v) {

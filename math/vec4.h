@@ -1,8 +1,8 @@
 #ifndef VEC4_H
 #define VEC4_H
 
-#include <cmath>
-#include <iostream>
+// #include <cmath>
+// #include <iostream>
 
 #include "vec3.h"
 
@@ -77,6 +77,15 @@ inline std::ostream& operator<<(std::ostream& out, const vec4& v) {
     return out << "(" << v.e[0] << ", " << v.e[1] << ", " << v.e[2] << ", " << v.e[3] << ")";
 }
 
+inline bool operator==(vec4 v, vec4 u) {
+    for (int i = 0; i < 4; i++) {
+        if (u.e[i] != v.e[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
 inline vec4 operator+(const vec4& u, const vec4& v) {
     return vec4(u.e[0] + v.e[0], u.e[1] + v.e[1], u.e[2] + v.e[2], u.e[3] + v.e[3]);
 }
@@ -93,13 +102,9 @@ inline vec4 operator*(double t, const vec4& v) {
     return vec4(t*v.e[0], t*v.e[1], t*v.e[2], t*v.e[3]);
 }
 
-inline vec4 operator*(const vec4& v, double t) {
-    return t * v;
-}
+inline vec4 operator*(const vec4& v, double t) { return t * v; }
 
-inline vec4 operator/(const vec4& v, double t) {
-    return (1/t) * v;
-}
+inline vec4 operator/(const vec4& v, double t) { return (1/t) * v; }
 
 // dot product of two vectors u, v
 inline double dot(const vec4& u, const vec4& v) {
@@ -112,19 +117,13 @@ inline double dot(const vec4& u, const vec4& v) {
 // cross product of two 4d vectors u, v doesn't exist
 
 // normalize lenght of vector
-inline vec4 unit_vector(const vec4& v) {
-    return v / v.length();
-}
+inline vec4 unit_vector(const vec4& v) { return v / v.length(); }
 
 // takes 3d vector (carthesian), returns 4d vector (homogeneous), only for positions!
-inline vec4 pos3_to_vec4(const vec3& u) {
-    return vec4(u.x(), u.y(), u.z(), 1);
-}
+inline vec4 pos3_to_vec4(const vec3& u) { return vec4(u.x(), u.y(), u.z(), 1); }
 
 // takes 3d vector (carthesian), returns 4d vector (homogeneous), only for directions!
-inline vec4 dir3_to_vec4(const vec3& u) {
-    return vec4(u.x(), u.y(), u.z(), 0);
-}
+inline vec4 dir3_to_vec4(const vec3& u) { return vec4(u.x(), u.y(), u.z(), 0); }
 
 // takes 4d vector (homogeneous vec) and returns 3d vec (carthesian)
 inline vec3 vec4_to_vec3(const vec4& u) {

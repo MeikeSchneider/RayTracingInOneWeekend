@@ -7,6 +7,25 @@ führe den Code aus, also rendere ein neues Bild:
 make compile
 ./main.exe > image.ppm
 
+Testen
+======
+Im Ordner tests: Datei anlegen für was man testen will: test_name.cpp 
+in der main Funktion im tests order die neue Funktion hinzufügen, damit sie mit ausgeführt wird
+make test
+
+Standard Test Aufbau: 
+
+/*
+#include "../name.h"
+#include <cassert>
+
+void test_name() {
+    // define variables
+    // define results/ function calls
+    // assert(functionResult == expectedResult)
+}
+*/
+
 Order:
 ======
 Datei file.h ist in Ordner folder_name, file.h soll in Datei außerhalb von folder_name included werden:
