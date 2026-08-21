@@ -1,0 +1,35 @@
+Was sind .obj Dateien?
+======================
+
+Textdatei, die 3D Geometrie beschreibt
+Zeile beginnt mit bestimmtem Kürzel, Kürzel sagt, was Zeile bedeutet
+
+Kürzel | Bedeutung          | Beispiel      | Erklärung
+=======|====================|===============|============================
+#      | comment            | # Kommentar   | alles in der Zeile nach dem Symbol wird ignoriert
+v      | vertex position    | v 1.0 2.0 3.0 | 3d pos der vertex
+vn     | vertex normal      | vn 0 1 0      | Normalenvektoren, später für Beleuchtung nützlich
+vt     | texture coordinate | vt 0.5 0.75   | beschreibt Position auf Textur, normalerweise 2 Werte
+f      | face               | f 1 2 3       | erzeuge Dreieck aus vertices 1, 2, und 3
+               
+später noch Sachen wie mtllib, usemtl, g, o (noch nicht relevant)
+
+zu face:
+- f 1 2 3 bedeutet: erzeuge Dreieck aus vertices 1, 2 und 3
+- Zahlen sind dabei indices in den vertex vector
+-> erzeuge Dreieck aus vertices[0], vertices[1], vertices[2]
+- obj zählt ab 1, vector ab 0, beim einlesen also -1
+
+faces können aber auch so aussehen:
+1. f 1/1/1 2/2/2 3/3/3
+    bedeutet Position / Texture Coordinate / Normal
+    zB 1/1/1 bedeutet Vertex 1, TexCoord 1, Normal 1
+
+2. f 1//7 2//8 3//9
+    bedeutet Vertex / keine Texture Coordinate / Normal
+
+3. f 1/4 2/5 3/6
+    bedeutet Vertex / Textur / keine Normal
+
+Für den Parser muss davon ausgegangen werden, dass alles in der obj Dreiecke sind.
+Wenn es Vierecke wären, müsste man sog. Trianglulation machen, was man extra implementieren müsste.

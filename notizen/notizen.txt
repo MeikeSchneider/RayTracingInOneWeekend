@@ -1,0 +1,29 @@
+Ausführen
+=========
+starte linux subsystem by typing 
+wsl
+
+führe den Code aus, also rendere ein neues Bild:
+make compile
+./main.exe > image.ppm
+
+Order:
+======
+Datei file.h ist in Ordner folder_name, file.h soll in Datei außerhalb von folder_name included werden:
+in other_file.h:  #include "folder_name/file.h"
+RayTracingInOneWeekend
+> folder_name
+    > file.h
+> other_file.h
+
+In file.h soll other_file.h eingebunden werden:
+#include "../file.h"
+Das .. macht, das man aus dem Ordner, in dem man drin ist, eins hoch geht.
+
+
+git
+====
+alles in Versionskontrolle/ add untracked files:    git add . 
+Nachschauen ob nur das drin ist, was auch soll:     git status
+Put changes into local stuff:                       git commit -m "text"
+Put changes onto github:                            git push

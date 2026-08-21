@@ -41,7 +41,7 @@ struct face_vertex{
 // vertices and triangles lists can be cleared using vertices.clear(); and triangles.clear();
 
 class obj_loader {
-    // class responsible for loading in .obj files, saving all of the information in it
+    // class responsible for loading in .obj files, saving all of the information
     // and generating a triangle mesh out of it.
     // Later: also providing info for lighting, textures etc.
 

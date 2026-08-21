@@ -1,0 +1,366 @@
+STRINGS
+Strings only with standard Bib:
+===============================
+#include <string>                   
+using namespace std;                oder
+string myString = "Hello";          std::string myString = "Hello";
+
+
+TERNARY OPERATOR
+variable = (condition) ? expressionTrue : expressionFalse;
+
+statt:
+if (variable condition) {
+    variable = expressionTrue;
+} else {
+    variable = expressionFalse;
+}
+
+
+FOR LOOP
+for (type varName = initValue; varName < condition; varName++) {...}
+zB for (int i = 0; i < 5; i++) {...}
+
+for-each loop 
+=============
+used to loop through elements in an array and other data structures, like vectors and lists
+for (type variableName : arrayName) {...}
+zB: int myNumbers[5] = {10, 20, 30, 40, 50};
+for (int num : myNumbers) { cout << num << "\n"; }
+-> outputs 10, then 20 etc
+
+
+ARRAY
+size is fixed, no adding or removing elements after it is created
+init:
+type arrayName[size];
+zB string cars[4] (set an array of size 4 named cars with type string.)
+
+put stuff into array: string cars[4] = {"Volvo", "BMW", "Ford", "Mazda"};
+change an element at a specific place: cars[0] = "Opel";
+
+size of an array: sizeof(arrayName);
+sizeof() operator returns the size of a type in bytes: 
+To fix: divide the size of the array by the size of the first element in the array
+int getArrayLength = sizeof(arraySize) / sizeof(arrayName[0]);
+
+multi-dimensional array: 
+string letters[2][4] = { { "A", "B", "C", "D" }, { "E", "F", "G", "H" } };
+access: letters[0][2];  // Outputs "C"
+change stuff: 
+letters[0][0] = "Z";
+cout << letters[0][0];  // Now outputs "Z" instead of "A" 
+loop through: 
+for (int i = 0; i < 2; i++) {
+  for (int j = 0; j < 4; j++) { cout << letters[i][j] << "\n"; } } 
+
+
+VECTORS
+= resizable arrays, removing and adding stuff is possible.
+zB. vector<string> cars = {"Volvo", "BMW", "Ford"};
+cars.push_back("Tesla"); -> added another car to back of list.
+
+&      *
+references:
+==========
+reference variable is an alias for an existing variable. Created using the & operator
+string food = "Pizza";  // food variable
+string &meal = food;    // reference to food
+
+Now, either food or meal can be used to refer to the same value:
+cout << food << "\n";  // Outputs Pizza
+cout << meal << "\n";  // Outputs Pizza
+Both food and meal refer to the same memory location. Changing one affects the other.
+
+& can also be used to get the memory address of a variable;
+which is the location of where the variable is stored on the computer:
+string food = "Pizza";
+cout << &food; // Outputs 0x6dfed4
+
+pointers
+========
+is a variable that stores the memory address as its value
+A pointer variable points to a data type (like int or string) of the same type, 
+and is created with the * operator.
+
+string food = "Pizza";  // A food variable of type string
+string* ptr = &food;    // A pointer variable, with the name ptr, that stores the address of food
+
+cout << food << "\n";   // Output the value of food (Pizza)
+cout << &food << "\n";  // Output the memory address of food (0x6dfed4)
+cout << ptr << "\n";    // Output the memory address of food with the pointer (0x6dfed4)
+
+It's also possible to use the pointer to get the value of the variable, by using the * operator 
+(the dereference operator)
+
+string food = "Pizza";  // Variable declaration
+string* ptr = &food;    // Pointer declaration
+
+// Reference: Output the memory address of food with the pointer (0x6dfed4)
+cout << ptr << "\n";
+
+// Dereference: Output the value of food with the pointer (Pizza)
+cout << *ptr << "\n";
+
+The * sign can be confusing here, as it does two different things in our code:
+    When used in declaration (string* ptr), it creates a pointer variable.
+    When not used in declaration, it act as a dereference operator.
+
+The pointer's value can also be changed.
+But this will also change the value of the original variable:
+string food = "Pizza";
+string* ptr = &food;
+
+cout << food << "\n";   // Output the value of food (Pizza)
+cout << &food << "\n";  // Output the memory address of food (0x6dfed4)
+cout << *ptr << "\n";   // Access the memory address of food and output its value (Pizza)
+*ptr = "Hamburger";     // Change the value of the pointer
+cout << *ptr << "\n";   // Output the new value of the pointer (Hamburger)
+cout << food << "\n";   // Output the new value of the food variable (Hamburger)
+
+
+FUNCTIONS
+void myFunction(type fname) { function body }
+
+use a default parameter value, by using the equals sign:
+void myFunction(string country = "Norway") { cout << country << "\n"; }
+int main() {
+myFunction("Sweden");   // Sweden
+myFunction();           // Norway
+return 0;
+}
+
+pass a reference to the function
+================================
+can be useful when you need to change the value of the argument(s)
+void changeValue(int &num) { num = 50; }
+
+int main() {
+  int value = 10;
+  changeValue(value);  // Call the function and change the value to 50
+  cout << value; 
+  return 0;
+}
+
+pass arrays to a function
+=========================
+void myFunction(int myNumbers[5]) {  // array thats 5 big
+  for (int i = 0; i < 5; i++) {  // loop through numbers and print them
+    cout << myNumbers[i] << "\n";
+  }
+}
+
+int main() {
+  int myNumbers[5] = {10, 20, 30, 40, 50};  // set the actual numbers
+  myFunction(myNumbers);
+  return 0;
+}
+
+Function overloading
+====================
+allows multiple functions to have the same name, as long as
+their parameters are different in type or number
+
+int myFunction(int x)
+float myFunction(float x)
+double myFunction(double x, double y)
+
+CLASSES
+
+Klassen und Instanzen
+=====================
+Methoden = Funktionen in Klasse
+Eigenschaften: Var, Parameter, ...
+um in C mit Objekten zu arbeiten, braucht man Beschreibung von Objekten 
+zB  Objekt Kugel: definiere Radius, Volumen etc
+Klasse für Kugel ist nur Beschreibung von Kugel, noch keine Kugel selbst
+Um eine Kugel zu bekommen muss ich Instanz von Klasse machen -> gibt Objekt Kugel
+Instanz von Klasse ist Objekt, das Beschreibung entspricht, die in Klasse def wurde. 
+Dafür Konstruktor: nimmt evt nix, evt Eingaben und baut Instanz, also ein Objekt
+
+class defines what an object should look like, and an object is created based on that class
+When you create an object from a class, it inherits all the variables and functions defined
+inside that class
+A car is an object.
+The car has attributes, such as weight and color, and methods, such as drive and brake
+Attributes and methods are basically variables and functions that belongs to the class.
+These are often referred to as "class members".
+
+class MyClass {       // The class
+  public:             // Access specifier
+    int myNum;        // Attribute (int variable)
+    string myString;  // Attribute (string variable)
+};
+
+MyClass myObj;  // Create an object of MyClass
+// Access attributes and set values
+myObj.myNum = 15; 
+myObj.myString = "Some text";
+
+class functions
+===============
+two ways to define functions that belongs to a class: 
+Inside class definition & Outside class definition
+
+inside:
+=======
+class MyClass {        // The class
+  public:              // Access specifier
+    void myMethod() { cout << "Hello World!"; }
+};
+
+int main() {
+  MyClass myObj;     // Create an object of MyClass
+  myObj.myMethod();  // Call the method
+  return 0;
+}
+
+outside:
+========
+class MyClass {        // The class
+  public:              // Access specifier
+    void myMethod();   // Method/function declaration
+};
+
+// Method/function definition outside the class
+void MyClass::myMethod() { cout << "Hello World!"; }
+
+int main() {
+  MyClass myObj;     // Create an object of MyClass
+  myObj.myMethod();  // Call the method
+  return 0;
+}
+
+with values:
+============
+class Car {
+  public:
+    int speed(int maxSpeed);
+};
+
+int Car::speed(int maxSpeed) { return maxSpeed; }
+
+int main() {
+  Car myObj; // Create an object of Car
+  cout << myObj.speed(200); // Call the method with an argument
+  return 0;
+}
+
+constructors
+============
+is a special method that is automatically called when an object of a class is created
+To create a constructor, use the same name as the class, followed by parentheses ()
+It has the same name as the class, has no return type (not even void), is usually declared public.
+
+with arguments
+==============
+class Car {        // The class
+  public:          // Access specifier
+    string brand;  // Attribute
+    string model;  // Attribute
+    int year;      // Attribute
+    Car(string x, string y, int z) { // Constructor with parameters
+      brand = x;
+      model = y;
+      year = z;
+    }
+};
+
+// Create Car objects and call the constructor with different values
+Car carObj1("BMW", "X5", 1999);
+Car carObj2("Ford", "Mustang", 1969);
+
+constructor overloading
+=======================
+for example one with and one without parameters
+Each constructor must have a different number or type of parameters, 
+so the compiler knows which one to use when you create an object.
+
+Access specifiers (public/ private)
+===================================
+public - members are accessible from outside the class
+private - members cannot be accessed (or viewed) from outside the class
+protected - members cannot be accessed from outside the class, 
+            however, they can be accessed in inherited classes
+It is possible to access private members of a class using a public method inside the same class.
+-> encapsulation
+By default, all members of a class are private if you don't specify
+
+Encapsulation
+=============
+To access a private attribute, use public "get" and "set" methods
+class Employee {
+  private:
+    // Private attribute
+    int salary;
+
+  public:
+    // Setter -> sets the value
+    void setSalary(int s) { salary = s; }
+    // Getter -> returns the value
+    int getSalary() { return salary; }
+};
+
+int main() {
+  Employee myObj;
+  myObj.setSalary(50000);
+  cout << myObj.getSalary();
+  return 0;
+} 
+
+Inheritance
+===========
+allows one class to reuse attributes and methods from another class
+To inherit from a class, use the : symbol
+It is useful for code reusability:
+reuse attributes and methods of an existing class when you create a new class
+for example a vecicle class and a car class that inherits from vehicle
+
+A class can also be derived from more than one base class, using a comma-separated list
+class MyChildClass: public MyClass, public MyOtherClass
+
+virtual functions
+=================
+is a member function in the base class that can be overridden in derived classes
+They let different objects respond differently to the same function call.
+Without virtual, C++ decides which function to call based on the pointer type,
+    not the actual object type
+With virtual, it checks the actual object the pointer is pointing to
+
+
+-> operator
+===========
+The -> operator is used to access members (like functions or variables) through a pointer.
+It's a shortcut for writing (*pointer).member
+If you are using a pointer to an object, use -> to access its members
+zB
+Animal* a = new Animal();
+a->sound(); // Same as (*a).sound(); 
+"Hol dir das Objekt was an dem Pointer steht und hl dir diese Eigenschaft/ Funktion"
+
+Namespaces
+==========
+A namespace is a way to group related code together under a name.
+It helps you avoid naming conflicts when your code grows or when you use code from multiple sources.
+
+
+shared_ptr<type>
+=================
+is a pointer to some type with reference-counting. 
+Every time it's value is assigned to another shared pointer, reference count is increased
+As shared pointers go to the end of a block or a function, the reference count is decreased
+If count is zero -> object safely deleted
+
+make_shared<thing>(thing_constructor_params ...) allocates a new instance of type thing, 
+using the constructor parameters. It returns a shared_ptr<thing>. 
+std::shared_ptr is included with the <memory> header.
+
+using statement: tells the compiler that we'll be getting shared_ptr and make_shared 
+from the std library, so we don't need to prefix these with std:: every time we reference them. 
+
+zB erzeuge Kugel. Möchte mehrere Sachen damit machen, also zeigen mehrere pointer drauf
+shared pointer hat counter um sich zu merken, wie viele pointer drauf zeigen.
+Wenn nichts mehr drauf zeigt weiß der shared pointer, dass das Objekt gelöscht werden soll.
+
+memory management
+

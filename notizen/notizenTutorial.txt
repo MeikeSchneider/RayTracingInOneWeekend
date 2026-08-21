@@ -1,0 +1,49 @@
+Ray Tracing in one Weekend Tutorial Infos
+=========================================
+
+PPM
+===
+view it as a picture: open with -> "PPM Image Preview"
+view it as a file (numbers): open with -> "Text Editor"
+
+writes values into a file
+p3 means, the colors are in ascii, then 3 rows for rgb triplets. 255 for max color
+
+Rays
+====
+Rays werden behandelt als Fuktion P(t)=A + t * b
+P ist 3D Position entlang einer Linie, im 3D Space
+A ist Ausgangspunkt des rays, b ist die Richtung. 
+Negative t Werte: nach "hinten" gehen. Positive: nur die Teile vor A, half-line oder ray genannt
+
+Viewport
+========
+Virtual viewport: dadurch sollen die rays geschickt werden
+ist ein virtuelles Rechteck im 3D Space, das ein Gitter an Bild Pixel locations hat.
+Ist eine virtuelle Fläche vor der Kamera, durch die in die Szene hineingeschaut wird.
+Auf diese Fläche wird das Bild projeziert.
+Abstand zwischen 2 Pixeln heißt pixel spacing, square pixels ist Standart. 
+Zu Beginn wird viewport als 2,0 definiert. 
+
+Kamera und Koordinaten
+======================
+Punkt im 3D Space, von dem aus alle rays geschickt werden, auch eye point genannt.
+Setze Distanz zwischen viewport und kamera Zentrum als 1 Einheit. 
+Diese Länge wird auch focal lenght genannt. Kamera liegt zu Beginn bei (0, 0, 0)
+y-Achse nach oben, x-Achse nach rechts, z-Achse in viewing direction.
+Nennt sich right-handed coordinates.
+Der 3D Raum hat also dieses Koordinaten System. Das veträgt sich aber nicht mit den Bild Koordinaten
+Da soll der 0-te Pixel oben links sein und der letzte unten rechts. 
+Das heißt, die Bild Koordinaten y-Achse ist invertiert.
+Wenn das Bild gescannt wird, gehen wir von oben links, von links nach rechts durch jede Reihe
+Um das Pixel Gitter zu navigieren, benutzen wir einen Vektor Vu vom linken rand zum rechten Rand 
+und einen Vektor Vv von oberen Rand zum unteren.
+
+Sphere
+======
+Gleichung für Kugel mir Radius r, mit Zentrum im Origin: x^2 + y^2 + z^2 = r2
+Mit beliebigem Zentrum (Cx, Cy, Cz): (Cx − x)^2 + (Cy − y)^2 + (Cz − z)^2 = r2
+
+Shading with surface normals
+============================
+vektor, der senkrecht zur Oberfläche steht am Schnittpunkt
