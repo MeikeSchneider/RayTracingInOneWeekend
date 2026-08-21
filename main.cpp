@@ -194,8 +194,12 @@ int main() {
     // add a triangle to the world
     // world.add(make_shared<triangle>(point3(-1, -0.6, -3), point3(1, -0.6, -3), point3(0, 1.2, -3)));
 
-    // add a simple triangle mesh consisting of one triangle to the world
-    // std::vector<vec3> vertex_list = {point3(-1, -0.6, -3), point3(1, -0.6, -3), point3(-1, 1.2, -3), point3(1, 1.2, -3)};
+    // add a simple triangle mesh consisting of two triangles to the world
+    std::vector<vec3> vertex_list = {point3(-1, -1, 0), point3(1, -1, 0), point3(-1, 1, 0), point3(1, 1, 0)};
+    std::vector<int> triangle_list = {0, 1, 2, 1, 2, 3};
+    triangle_mesh t = triangle_mesh(vertex_list, triangle_list, vec3(0, 0, -3), vec3(1, 1, 1), 0.8, 0.8, 0);
+    // world.add(make_shared<triangle_mesh>(t));
+    /*
     std::vector<vec3> vertex_list = {point3(-2, -0.6, -3), point3(-2, 1.8, -3), point3(-1, -0.6, -3),
                                      point3(-1, 1.2, -3), point3(1, -0.6, -3), point3(1, 1.2, -3),
                                      point3(2, -0.6, -3), point3(2, 1.8, -3)};
@@ -203,17 +207,27 @@ int main() {
     std::vector<int> triangle_list = {0, 1, 2, 1, 2, 3, 2, 3, 4,
                                       3, 4, 5, 4, 5, 6, 5, 6, 7};
     // world.add(make_shared<triangle_mesh>(vertex_list, triangle_list));
-    
+    */
     // add "floor" to the world
-    world.add(make_shared<sphere>(point3(0, -100.5, -1), 100));
+    // world.add(make_shared<sphere>(point3(0, -100.5, -1), 100));
     
     // add triangle mesh read from obj file to world
     obj_loader loader;
     loader.load("obj_files/cube.obj");
     triangle_mesh m = make_triangle_mesh(loader);
-    triangle_mesh n = triangle_mesh(m.get_vertices(), m.get_triangles(), vec3(0, 0, -3));
-    world.add(make_shared<triangle_mesh>(n));
-
+    // weird image artefact at (-2, 0, -5)
+    triangle_mesh n = triangle_mesh(m.get_vertices(), m.get_triangles(), vec3(-2, 0, -5), vec3(3, 3, 3), 0.8, 0.8, 0);
+    std::clog << "matrix = " << n.obj_to_world_matrix << std::endl;
+    std::clog << "vertices = " << n.get_vertices() << ", triangles = " << n.get_triangles() << std::endl;
+    std::clog << "size of vertices, triangles = " << sizeof(n.get_vertices()) << ", " << sizeof(n.get_triangles()) << std::endl;
+    
+    // world.add(make_shared<triangle_mesh>(n));
+    // content of cube.obj recreated by hand
+    std::vector<vec3> list1 = {vec3(0, 0, 0), vec3(0, 1, 0), vec3(1, 1, 0), vec3(1, 0, 0), vec3(0, 0, 1), vec3(0, 1, 1), vec3(1, 1, 1), vec3(1, 0, 1)};
+    std::vector<int> list2 = {2, 6, 7, 2, 7, 3, 0, 4, 5, 0, 5, 1, 6, 2, 1, 6, 1, 5, 3, 7, 4, 3, 4, 0, 7, 6, 5, 7, 5, 4, 2, 3, 0, 2, 0, 1};
+    triangle_mesh o = triangle_mesh(list1, list2, vec3(-2, 0, -5), vec3(3, 3, 3), 0.8, 0.8, 0);
+    world.add(make_shared<triangle_mesh>(o));
+    
     camera cam; // create camera object
 
     cam.aspect_ratio = 16.0 / 9.0;  // image width to image height is 16:9 

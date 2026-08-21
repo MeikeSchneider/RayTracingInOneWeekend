@@ -144,7 +144,7 @@ class triangle : public simple_object {
         // set hit record
         rec.t = t; // t from ray equation, needed for insection calculation
         rec.p = intersection; // actual intersection point
-        vec3 outward_normal = unit_vector(cross(edge_ab, edge_ac));
+        vec3 outward_normal = unit_vector(triangle_plane_normal);
         rec.set_face_normal(r, outward_normal);
         return true; // The point is inside the triangle!
     }

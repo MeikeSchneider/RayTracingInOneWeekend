@@ -36,7 +36,7 @@ class triangle_mesh : public simple_object {
     // Uses the Möller-Trumbore-algorithm, expanded for meshes
     bool hit(const ray& r, interval ray_t, const matrix camera_to_world_matrix, hit_record& rec) const override {
         // epsilon defined to account for floating point errors
-        constexpr float epsilon = std::numeric_limits<float>::epsilon();
+        constexpr double epsilon = std::numeric_limits<double>::epsilon();
 
         // variables for temporary hit record
         double temp_t = ray_t.max;
@@ -74,7 +74,7 @@ class triangle_mesh : public simple_object {
             double det = dot(edge_ab, P);
 
             // check if ray and triangle plane are paralell
-            if(abs(det) < epsilon) {continue;}
+            if(std::abs(det) < epsilon) {continue;} // std::abs NOT abs!!!!
         
             // calculate u from the barycentric coordinates for a triangle:
             // any point P on a triangle is defined as P = a + u(b-a) + v(c-a)
@@ -97,11 +97,11 @@ class triangle_mesh : public simple_object {
             // std::clog << "intersection = " << intersection << std::endl;
             
             // set temporary hit record if a smaller t > 0 is found -> an intersection closer to the camera
-            if (t < temp_t && t > 0) {
+            if (t < temp_t && t > epsilon) {
                 // std::clog << "wrote into temp hit record" << std::endl;
                 temp_t = t; // t from ray equation, needed for insection calculation
                 temp_p = intersection; // actual intersection point
-                temp_outward_normal = unit_vector(cross(edge_ab, edge_ac));
+                temp_outward_normal = unit_vector(triangle_plane_normal);
             }
         } // end of big for loop
         
