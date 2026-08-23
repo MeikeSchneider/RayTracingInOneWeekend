@@ -67,6 +67,14 @@ inline color operator*(color c1, color c2) {
     return color(c1.r * c2.r, c1.g * c2.g, c1.b * c2.b);
 }
 
+inline color operator*(color c2, vec3 v) {
+    return color(c2.r * v.x(), c2.g * v.y(), c2.b * v.z());
+}
+
+inline color operator*(vec3 v, color c2) {
+    return color(v.x() * c2.r, v.y() * c2.g, v.z() * c2.b);
+}
+
 inline color operator*(double t, color c) {
     return color(t * c.r, t * c.g, t * c.b);
 }

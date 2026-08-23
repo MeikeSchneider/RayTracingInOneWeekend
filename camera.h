@@ -147,10 +147,30 @@ class camera : public simple_object {
     
                 // rec.p = intersection point from hit_record
                 // calculate vector from intersection point to light source
-                vec3 v = (vec4_to_vec3(invert(obj_to_world_matrix) * pos3_to_vec4(l->get_pos()))) - rec.p;
-                double angle = dot(unit_vector(rec.normal), unit_vector(v));
-                c = c + (1.0/pi) * rec.mat.get_diffuse_color() * (l_light * angle);
+
+                // intersection_in_cam_space corresponds to p
+                vec3 l_pos_in_cam_space = (vec4_to_vec3(invert(obj_to_world_matrix) * pos3_to_vec4(l->get_pos())));
+                vec3 light_source_dir = l_pos_in_cam_space - rec.p;
+                double angle = dot(unit_vector(rec.normal), unit_vector(light_source_dir));
+                // diffuse light: skalar (repräsentiert die diffus reflektivität) * 
+                // skalar (repräsentiert Intensität des diffus reflektierten Lichts in Abhängigkeit vom Winkel der Oberflache des Objekts zu der Richtung des einfallenden Lichts) 
+                // * incoming light
+                // * wie sehr Oberflächen bestimmte Farben reflektieren
+                // kd * (N*L) * IL
+                // kd hardcoded, will me material property later: rec.mat.get_diffuse_reflectivity() kd = 1/pi
+                color diffuse_light = (1.0/pi) * angle * l_light;
+                
+                
+                vec3 view_dir = unit_vector(-r.direction());
+                vec3 dir = - unit_vector(rec.p - vec3(0, 0, 0));
+                // 2 * (l * n) * n - l
+                vec3 refl_dir = 2 * dot(unit_vector(rec.normal), unit_vector(light_source_dir)) * unit_vector(rec.normal) - unit_vector(light_source_dir);
+                // ns hardcoded, will be a material property later: rec.mat.get_specular_sharpness()
+                // ks hardcoded, will me material property later: rec.mat.get_specular_reflectivity() kd = 2/pi
+                color specular_light = (2.0/pi) * angle * pow(dot(view_dir, unit_vector(refl_dir)), 10) * l_light;  // ks * dot(R, V)^ns * IL
+                c = c + diffuse_light * rec.mat.get_diffuse_color() + specular_light; // later: specular * rec.mat.get_specular_color()
             }
+            
             return c;
         }
         
