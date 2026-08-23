@@ -15,6 +15,7 @@ struct color {
     double b;
 
     // ray(const point3& origin, const vec3& direction) : orig(origin), dir(direction) {}
+    color() : r(0), g(0), b(0) {};
     color(double r, double g, double b) : r(r), g(g), b(b) {}
 };
 
@@ -23,7 +24,6 @@ inline std::ostream& operator<<(std::ostream& out, const color& c) {
     return out << c.r << ", " << c.g << ", " << c.b;
 }
 
-
 // explain to iostream how to deal with list of colors
 inline std::ostream& operator<<(std::ostream& os, const std::vector<color>& c) {
     for (const auto i : c) {
@@ -31,7 +31,6 @@ inline std::ostream& operator<<(std::ostream& os, const std::vector<color>& c) {
     }
     return os;
 }
-
 
 inline bool operator==(color c1, color c2) {
     if (c1.r != c2.r) { return false; }

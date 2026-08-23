@@ -1,7 +1,8 @@
-#ifndef HITTABLE_H
-#define HITTABLE_H
+#ifndef HIT_RECORD_H
+#define HIT_RECORD_H
 
 #include "ray.h"
+#include "material.h"
 
 class hit_record {
   public:
@@ -9,6 +10,7 @@ class hit_record {
     vec3 normal;
     double t;
     bool front_face;
+    material mat;
 
     void set_face_normal(const ray& r, const vec3& outward_normal) {
         // Sets the hit record normal vector.
@@ -21,13 +23,6 @@ class hit_record {
           normal = -outward_normal;
         }
     }
-};
-
-class hittable {
-  public:
-    virtual ~hittable() = default;
-    // virtual sagt, dass alles was von hittable erbt, hier tatsächliche Funktionalität rein packen muss
-    virtual bool hit(const ray& r, interval ray_t, hit_record& rec) const = 0;
 };
 
 #endif

@@ -3,7 +3,7 @@
 
 #include "rtweekend.h"
 #include "camera.h"
-#include "hittable.h"
+#include "hit_record.h"
 
 class simple_object {
     /*
@@ -16,7 +16,10 @@ class simple_object {
     public:
         // Matrix always represents the transformation from object space to world space
         matrix obj_to_world_matrix;
-        const vec3 get_pos() { return vec3(obj_to_world_matrix.e[3], obj_to_world_matrix.e[7], obj_to_world_matrix.e[11]); }
+        const vec3 get_pos() {
+            return vec3(obj_to_world_matrix.e[3],
+                        obj_to_world_matrix.e[7],
+                        obj_to_world_matrix.e[11]); }
     
         // empty constructor: identity matrix
         simple_object() {
@@ -61,10 +64,11 @@ class simple_object {
         }
 
         // hit function. Place holder for overwriting later, sets an object as not hittable as a standard
+        /*
         virtual bool hit(const ray& r, interval ray_t, const matrix camera_to_world_matrix, hit_record& rec) const {
             std::clog << "called base function" << std::endl;
             return false;
-        }
+        } */
 };
 
 #endif

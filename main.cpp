@@ -192,7 +192,7 @@ int main() {
     objects_in_scene world;
     lights_in_scene lights;
 
-    light l(vec3(-10, 10, 0), color(1, 1, 1), 1.0);
+    light l(vec3(-10, 10, 0), color(1, 1, 1), 2.0);
     lights.add(make_shared<light>(l));
 
     /* old objects
@@ -284,8 +284,10 @@ int main() {
     // add triangle mesh "fox"
     obj_loader loader;
     loader.load("obj_files/fox.obj");
+    material mat = material(color(1, 0.5, 0));
     triangle_mesh m = make_triangle_mesh(loader);
     triangle_mesh n = triangle_mesh(m.get_vertices(), m.get_triangles(), vec3(0, -4, -5), vec3(1.5, 1.5, 1.5), 0, 1.1571, 0);
+    n.set_material(mat);
     
     // get debugging info: how many vertices & triangles there are 
     // std::clog << "size of vertices = " << n.get_vertices().size() << std::endl;

@@ -1,13 +1,13 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
-#include "../simple_object.h"
+#include "../hittable_object.h"
 
-class sphere : public simple_object {
+class sphere : public hittable_object {
     // simple_object is base class for sphere, constructors of simple_objects are base conatructors
     public: 
         // basic constructor: calling the constructor from simple_object with no input
-        sphere() : simple_object() {}
+        sphere() : hittable_object() {}
 
         sphere(vec3 position, float radius) {
             // constructor with position and radius, uses base constructor simple_object(vec3 translation, vec3 scale)
@@ -68,6 +68,7 @@ class sphere : public simple_object {
             // outward_normal is normalized p in camera space
             vec3 outward_normal = unit_vector(p_normal_in_cam_space);
             rec.set_face_normal(r, outward_normal);
+            rec.mat = mat;
 
             return true;
         }

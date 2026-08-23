@@ -2,34 +2,32 @@
 #define TRIANGLE_MESH_H
 
 #include <vector>
-#include "../simple_object.h"
+#include "../hittable_object.h"
 
-class triangle_mesh : public simple_object {
+class triangle_mesh : public hittable_object {
     public:
     // getters for private variable vertices
     // use reference to avoid unneccessary copying
     const std::vector<vec3>& get_vertices() const { return vertices; }
-    // old getter: std::vector<vec3> get_vertices() { return vertices; }
     // getters for private variable triangles
     const std::vector<int>& get_triangles() const { return triangles; }
-    // std::vector<int> get_triangles() { return triangles; }
     
     // basic constructor that sets only vertices and triangles
     triangle_mesh(std::vector<vec3> vertex_list, std::vector<int> triangle_list
-        ) : simple_object(), vertices(vertex_list), triangles(triangle_list) {}
+        ) : hittable_object(), vertices(vertex_list), triangles(triangle_list) {}
     
     // constructor with translation
     triangle_mesh(std::vector<vec3> vertex_list, std::vector<int> triangle_list, vec3 translation
-        ) : simple_object(translation), vertices(vertex_list), triangles(triangle_list) {}
+        ) : hittable_object(translation), vertices(vertex_list), triangles(triangle_list) {}
     
     // constructor with translation and scale
     triangle_mesh(std::vector<vec3> vertex_list, std::vector<int> triangle_list, vec3 translation, vec3 scale
-        ) : simple_object(translation, scale), vertices(vertex_list), triangles(triangle_list) {}
+        ) : hittable_object(translation, scale), vertices(vertex_list), triangles(triangle_list) {}
 
     // constructor with everything: translation, scale and rotation
     triangle_mesh(std::vector<vec3> vertex_list, std::vector<int> triangle_list, vec3 translation, vec3 scale, 
         float xRotation, float yRotation, float zRotation
-        ) : simple_object(translation, scale, xRotation, yRotation, zRotation
+        ) : hittable_object(translation, scale, xRotation, yRotation, zRotation
         ), vertices(vertex_list), triangles(triangle_list) {}
 
     // hit function: test for all triangles of the mesh if the ray hits it
@@ -112,6 +110,7 @@ class triangle_mesh : public simple_object {
             rec.t = temp_t;
             rec.p = temp_p;
             rec.set_face_normal(r, temp_outward_normal);
+            rec.mat = mat;
             return true; // The point is inside the triangle!
         }
         return false;

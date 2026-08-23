@@ -138,18 +138,18 @@ class camera : public simple_object {
         if (world.hit(r, interval(0, infinity), obj_to_world_matrix, rec)) {
             // takes the normal vector from hit record, adds (1, 1, 1), multiplies by 0.5
             // (is done to scale numbers from -1, 1 to 0, 1)
+            // old way of shading: use surface normals, nothing else c = 0.5 * (rec.normal + color(1, 1, 1));
 
             // Lambert's cosine law
             color c(0, 0, 0);
-            // old way of shading: use surface normals, nothing else c = 0.5 * (rec.normal + color(1, 1, 1));
             for (const std::shared_ptr<light> l : lights.lights) {
                 color l_light = l->get_intensity() * l->get_light_color();
+    
                 // rec.p = intersection point from hit_record
-                // calculate vector from intersection point to ight source
-
+                // calculate vector from intersection point to light source
                 vec3 v = (vec4_to_vec3(invert(obj_to_world_matrix) * pos3_to_vec4(l->get_pos()))) - rec.p;
                 double angle = dot(unit_vector(rec.normal), unit_vector(v));
-                c = c + (l_light * angle);
+                c = c + (1.0/pi) * rec.mat.get_diffuse_color() * (l_light * angle);
             }
             return c;
         }

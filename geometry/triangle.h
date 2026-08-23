@@ -1,9 +1,9 @@
 #ifndef TRIANGLE_H
 #define TRIANGLE_H
 
-#include "../simple_object.h"
+#include "../hittable_object.h"
 
-class triangle : public simple_object {
+class triangle : public hittable_object {
     public:
     // getter functions for vertex variables
     vec3 get_a() { return vertex_a; }
@@ -13,22 +13,22 @@ class triangle : public simple_object {
     // constructors
     // basic constructor: sets a, b, c
     // object_to_world_matrix is identity matrix, set by simple object base constructor
-    triangle(vec3 a, vec3 b, vec3 c) : simple_object(), vertex_a(a), vertex_b(b), vertex_c(c) {}
+    triangle(vec3 a, vec3 b, vec3 c) : hittable_object(), vertex_a(a), vertex_b(b), vertex_c(c) {}
 
     // constructor with a, b, c, translation given. Sets a, b, c.
     // object_to_world_matrix is set by base constructor using the translation
     triangle(vec3 a, vec3 b, vec3 c, vec3 translation
-        ) : simple_object(translation), vertex_a(a), vertex_b(b), vertex_c(c) {}
+        ) : hittable_object(translation), vertex_a(a), vertex_b(b), vertex_c(c) {}
 
     // constructor with a, b, c, translation, scale given. Sets a, b, c.
     // object_to_world_matrix is set by base constructor using translation, scale
     triangle(vec3 a, vec3 b, vec3 c, vec3 translation, vec3 scale
-        ) : simple_object(translation, scale), vertex_a(a), vertex_b(b), vertex_c(c) {}
+        ) : hittable_object(translation, scale), vertex_a(a), vertex_b(b), vertex_c(c) {}
 
     // constructor with a, b, c, translation, scale, rotations given. Sets a, b, c.
     // object_to_world_matrix is set by base constructor using translation, scale, rotations
     triangle(vec3 a, vec3 b, vec3 c, vec3 translation, vec3 scale, float xRotation, float yRotation, float zRotation
-        ) : simple_object(translation, scale, xRotation, yRotation, zRotation), vertex_a(a), vertex_b(b), vertex_c(c) {}
+        ) : hittable_object(translation, scale, xRotation, yRotation, zRotation), vertex_a(a), vertex_b(b), vertex_c(c) {}
 
     bool my_own_hit_test(const ray& r, interval ray_t, const matrix camera_to_world_matrix, hit_record& rec) const {
         // the first implementation of a ray-triangle-intersection test I did.
@@ -146,6 +146,7 @@ class triangle : public simple_object {
         rec.p = intersection; // actual intersection point
         vec3 outward_normal = unit_vector(triangle_plane_normal);
         rec.set_face_normal(r, outward_normal);
+        rec.mat = mat;
         return true; // The point is inside the triangle!
     }
 
