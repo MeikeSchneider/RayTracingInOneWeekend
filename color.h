@@ -6,6 +6,11 @@
 
 using color = vec3;  // color is just a vec3 with rgb values
 
+// TODO make this into a class. 
+// have different functions that convert the raw data
+// that is saved in color_container into the desired file format. Do not export image though!
+
+// TODO: change return type to expected type from file format
 void write_color(std::ostream& out, const color& pixel_color) {
     auto r = pixel_color.x();
     auto g = pixel_color.y();

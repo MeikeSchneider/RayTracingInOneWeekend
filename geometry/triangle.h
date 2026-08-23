@@ -120,7 +120,7 @@ class triangle : public simple_object {
         double det = dot(edge_ab, P);
 
         // check if ray and triangle plane are paralell
-        if(abs(det) < epsilon) {return false;}
+        if(std::abs(det) < epsilon) { return false; }
         
         // calculate u from the barycentric coordinates for a triangle:
         // any point P on a triangle is defined as P = a + u(b-a) + v(c-a)
