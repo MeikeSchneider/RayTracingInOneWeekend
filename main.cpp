@@ -2,6 +2,7 @@
 #include "camera.h"
 #include "simple_object.h" // included for testing
 #include "objects_in_scene.h" // included for "what objects are in the world"
+#include "lights_in_scene.h"
 #include "geometry/sphere.h" // included for "floor"
 #include "geometry/triangle.h" // included for testing
 #include "geometry/triangle_mesh.h" // needed for meshes
@@ -189,6 +190,11 @@ void test_obj_loader() {
 int main() {
     // TODO comand line parsing logic (if (--ppm etc))
     objects_in_scene world;
+    lights_in_scene lights;
+
+    light l(vec3(-10, 10, 0), color(1, 1, 1), 1.0);
+    lights.add(make_shared<light>(l));
+
     /* old objects
     Here are all the old things that were added to the world for testing/ different obj models
     // SPHERE
@@ -259,6 +265,14 @@ int main() {
     triangle_mesh n = triangle_mesh(m.get_vertices(), m.get_triangles(), vec3(0, -4, -5), vec3(1.5, 1.5, 1.5), 0, 1.1571, 0);
     world.add(make_shared<triangle_mesh>(n));
 
+    // BETTER SHIBA
+    // add triangle mesh "shiba"
+    obj_loader loader;
+    loader.load("obj_files/shiba.obj");
+    triangle_mesh m = make_triangle_mesh(loader);
+    triangle_mesh n = triangle_mesh(m.get_vertices(), m.get_triangles(), vec3(0, -4, -16), vec3(20, 20, 20), 0, 1.57, 0);
+    world.add(make_shared<triangle_mesh>(n));
+
     */
 
     // make a plane out of a triangle mesh to have a "floor"
@@ -267,11 +281,11 @@ int main() {
     triangle_mesh plane = triangle_mesh(v1, t1, vec3(-50, -22, -1), vec3(100, 0, 55));
     world.add(make_shared<triangle_mesh>(plane));
     
-    // add triangle mesh "shiba-inu"
+    // add triangle mesh "fox"
     obj_loader loader;
-    loader.load("obj_files/shiba.obj");
+    loader.load("obj_files/fox.obj");
     triangle_mesh m = make_triangle_mesh(loader);
-    triangle_mesh n = triangle_mesh(m.get_vertices(), m.get_triangles(), vec3(0, -4, -16), vec3(20, 20, 20), 0, 1.57, 0);
+    triangle_mesh n = triangle_mesh(m.get_vertices(), m.get_triangles(), vec3(0, -4, -5), vec3(1.5, 1.5, 1.5), 0, 1.1571, 0);
     
     // get debugging info: how many vertices & triangles there are 
     // std::clog << "size of vertices = " << n.get_vertices().size() << std::endl;
@@ -309,5 +323,5 @@ int main() {
     // test_mesh_hit();
     // test_obj_loader();
 
-    cam.render(world);
+    cam.render(world, lights);
 }

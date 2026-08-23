@@ -28,7 +28,8 @@ inline std::ostream& operator<<(std::ostream& os, const std::vector<tex_coord>& 
 
 struct face_vertex{
     // a structure that holds the (possibly) 3 values that a face has, each index starts at 1
-    int vertex_index = -1; // initializing it with -1 means, it's not been set.
+    // initializing with -1 means, it's not been set.
+    int vertex_index = -1;
     int texture_index = -1;
     int normal_index = -1;
 };
@@ -57,10 +58,10 @@ class obj_loader {
     // Later: also providing info for lighting, textures etc.
 
     private:
-    std::vector<vec3> vertices_lst; // list of 3d coordinates of the vertices
-    std::vector<vec3> normals_lst; // list of 3d coordinates of normal vectors
-    std::vector<tex_coord> texCoords_lst; // list of 2d texture coords. 
-    std::vector<face_vertex> faces_lst; // each face_vertex in the list has aspects of face_vertex
+    std::vector<vec3> vertices_lst; // list of 3d coordinates of the vertices, specified by v
+    std::vector<vec3> normals_lst; // list of 3d coordinates of normal vectors, specified by vn
+    std::vector<tex_coord> texCoords_lst; // list of 2d texture coords, specified by vt
+    std::vector<face_vertex> faces_lst; // each face_vertex in the list has aspects of face_vertex, specifies by f
 
     public:
     // getter for private variables

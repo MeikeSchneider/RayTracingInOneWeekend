@@ -3,6 +3,7 @@
 
 #include "simple_object.h"
 #include "objects_in_scene.h"
+#include "lights_in_scene.h"
 
 class camera : public simple_object {
     public:
@@ -36,7 +37,7 @@ class camera : public simple_object {
         obj_to_world_matrix = matrix::Translation(position) * rotation;
     }
 
-    void render(objects_in_scene& world) {
+    void render(objects_in_scene& world, lights_in_scene& lights) {
         // change this function if using a different file format. 
         // TODO add the container where the color info is supposed to be saved render(world, vector& color_container)
         initialize();
@@ -55,7 +56,8 @@ class camera : public simple_object {
                 for (int sample = 0; sample < samples_per_pixel; sample++) {
                     ray r = get_ray(i, j);
                     // std::clog << "ray origin, direction = " << r.origin() << ", " << r.direction() << std::endl;
-                    pixel_color += ray_color(r, world);
+                    // pixel_color += ray_color(r, world);
+                    pixel_color = pixel_color + ray_color(r, world, lights);
                 }
                 // TODO this needs to change: write the data into color_container instead. 
                 // actual image drawing is handled in main (or output.h, if that exists)
@@ -124,8 +126,8 @@ class camera : public simple_object {
         return vec3(random_double() - 0.5, random_double() - 0.5, 0);
     }
     
-    // color ray_color(const ray& r, const hittable& world) const {
-    color ray_color(const ray& r, objects_in_scene& world) const { // TODO: change to objects_in_scene world
+    // color ray_color(const ray& r, objects_in_scene& world) const {
+    color ray_color(const ray& r, objects_in_scene& world, lights_in_scene& lights) const {
         // function takes a ray and the list of simple_objects in the world
         // this holds information about hits
         hit_record rec;
@@ -136,8 +138,20 @@ class camera : public simple_object {
         if (world.hit(r, interval(0, infinity), obj_to_world_matrix, rec)) {
             // takes the normal vector from hit record, adds (1, 1, 1), multiplies by 0.5
             // (is done to scale numbers from -1, 1 to 0, 1)
-            // add phong here
-            return 0.5 * (rec.normal + color(1, 1, 1));
+
+            // Lambert's cosine law
+            color c(0, 0, 0);
+            // old way of shading: use surface normals, nothing else c = 0.5 * (rec.normal + color(1, 1, 1));
+            for (const std::shared_ptr<light> l : lights.lights) {
+                color l_light = l->get_intensity() * l->get_light_color();
+                // rec.p = intersection point from hit_record
+                // calculate vector from intersection point to ight source
+
+                vec3 v = (vec4_to_vec3(invert(obj_to_world_matrix) * pos3_to_vec4(l->get_pos()))) - rec.p;
+                double angle = dot(unit_vector(rec.normal), unit_vector(v));
+                c = c + (l_light * angle);
+            }
+            return c;
         }
         
         // if nothing is hit: paint the background blue

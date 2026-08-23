@@ -8,8 +8,8 @@ Kürzel | Bedeutung          | Beispiel      | Erklärung
 =======|====================|===============|============================
 #      | comment            | # Kommentar   | alles in der Zeile nach dem Symbol wird ignoriert
 v      | vertex position    | v 1.0 2.0 3.0 | 3d pos der vertex
-vn     | vertex normal      | vn 0 1 0      | Normalenvektoren, später für Beleuchtung nützlich
-vt     | texture coordinate | vt 0.5 0.75   | beschreibt Position auf Textur, normalerweise 2 Werte
+vn     | vertex normal      | vn 0 1 0      | Normalenvektoren, später für Beleuchtung nützlich, nicht unbedingt normalisiert
+vt     | texture coordinate | vt 0.5 0.75   | beschreibt Position auf Textur, normalerweise 2 Werte zwischen 0 & 1, optional ein dritter (default = 0)
 f      | face               | f 1 2 3       | erzeuge Dreieck aus vertices 1, 2, und 3
                
 später noch Sachen wie mtllib, usemtl, g, o (noch nicht relevant)

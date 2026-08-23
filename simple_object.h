@@ -16,6 +16,7 @@ class simple_object {
     public:
         // Matrix always represents the transformation from object space to world space
         matrix obj_to_world_matrix;
+        const vec3 get_pos() { return vec3(obj_to_world_matrix.e[3], obj_to_world_matrix.e[7], obj_to_world_matrix.e[11]); }
     
         // empty constructor: identity matrix
         simple_object() {

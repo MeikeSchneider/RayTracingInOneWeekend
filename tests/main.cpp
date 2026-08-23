@@ -3,6 +3,7 @@
 void test_vec3();
 void test_vec4();
 void test_matrix();
+void test_color();
 
 int main() {
     std::cout << "Testing vec3...\n";
@@ -13,6 +14,9 @@ int main() {
 
     std::cout << "Testing matrix...\n";
     test_matrix();
+
+    std::cout << "Testing color...\n";
+    test_color();
 
 
     std::cout << "\nAll tests passed!\n";
