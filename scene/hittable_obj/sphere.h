@@ -1,7 +1,7 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
-#include "../hittable_object.h"
+#include "hittable_object.h"
 
 class sphere : public hittable_object {
     // simple_object is base class for sphere, constructors of simple_objects are base conatructors

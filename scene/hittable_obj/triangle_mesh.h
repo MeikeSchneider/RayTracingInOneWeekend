@@ -2,7 +2,7 @@
 #define TRIANGLE_MESH_H
 
 #include <vector>
-#include "../hittable_object.h"
+#include "hittable_object.h"
 
 class triangle_mesh : public hittable_object {
     public:

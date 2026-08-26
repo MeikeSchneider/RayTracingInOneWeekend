@@ -1,9 +1,9 @@
 #ifndef SIMPLE_OBJECT_H
 #define SIMPLE_OBJECT_H
 
-#include "rtweekend.h"
+#include "../rtweekend.h"
 #include "camera.h"
-#include "hit_record.h"
+#include "../rendering/hit_record.h"
 
 class simple_object {
     /*
@@ -62,13 +62,6 @@ class simple_object {
             obj_to_world_matrix.e[7]  = position.y();
             obj_to_world_matrix.e[11] = position.z();
         }
-
-        // hit function. Place holder for overwriting later, sets an object as not hittable as a standard
-        /*
-        virtual bool hit(const ray& r, interval ray_t, const matrix camera_to_world_matrix, hit_record& rec) const {
-            std::clog << "called base function" << std::endl;
-            return false;
-        } */
 };
 
 #endif

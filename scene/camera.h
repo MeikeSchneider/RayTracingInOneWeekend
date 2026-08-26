@@ -2,8 +2,9 @@
 #define CAMERA_H
 
 #include "simple_object.h"
-#include "lighting/lights_in_scene.h"
+#include "lights_in_scene.h"
 #include "objects_in_scene.h"
+#include "../io/image_writer.h"
 
 
 class camera : public simple_object {
@@ -127,9 +128,9 @@ class camera : public simple_object {
         return vec3(random_double() - 0.5, random_double() - 0.5, 0);
     }
     
-    // color ray_color(const ray& r, objects_in_scene& world) const {
+    // takes a ray and the lists of objects and light sources in the world
+    // checks if the ray hits an object and returns a color for the pixel
     color ray_color(const ray& r, objects_in_scene& world, lights_in_scene& lights) const {
-        // function takes a ray and the list of simple_objects in the world
         // this holds information about hits
         hit_record rec;
 

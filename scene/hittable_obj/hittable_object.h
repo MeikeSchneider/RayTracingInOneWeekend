@@ -1,8 +1,8 @@
 #ifndef HITTABLE_OBJECT_H
 #define HITTABLE_OBJECT_H
 
-#include "simple_object.h"
-#include "lighting/material.h"
+#include "../../scene/simple_object.h"
+#include "../../rendering/material.h"
 
 class hittable_object : public simple_object {
     using simple_object::simple_object;

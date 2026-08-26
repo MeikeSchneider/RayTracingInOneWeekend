@@ -1,7 +1,7 @@
 #ifndef RAY_H
 #define RAY_H
 
-#include "math/vec3.h"
+#include "../math/vec3.h"
 
 class ray {
   // P(t) = A + t * b

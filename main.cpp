@@ -1,12 +1,12 @@
 #include "rtweekend.h" // general main header file
-#include "camera.h"
-#include "simple_object.h" // included for testing
-#include "objects_in_scene.h" // included for "what objects are in the world"
-#include "lighting/lights_in_scene.h"
-#include "geometry/sphere.h" // included for "floor"
-#include "geometry/triangle.h" // included for testing
-#include "geometry/triangle_mesh.h" // needed for meshes
-#include "obj_loader.h" // to load in .obj files
+#include "scene/camera.h"
+#include "scene/simple_object.h" // included for testing
+#include "scene/objects_in_scene.h" // included for "what objects are in the world"
+#include "scene/lights_in_scene.h"
+#include "scene/hittable_obj/sphere.h" // included for "floor"
+#include "scene/hittable_obj/triangle.h" // included for testing
+#include "scene/hittable_obj/triangle_mesh.h" // needed for meshes
+#include "io/obj_loader.h" // to load in .obj files
 
 void test_simple_obj() {
     // test the empty constructor

@@ -40,7 +40,7 @@ inline double random_double(double min, double max) {
 #include "math/vec3.h"
 #include "math/vec4.h"
 #include "math/matrix.h"
-#include "color.h"
-#include "ray.h"
+#include "rendering/color.h"
+#include "rendering/ray.h"
 
 #endif

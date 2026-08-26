@@ -2,7 +2,7 @@
 #define HIT_RECORD_H
 
 #include "ray.h"
-#include "lighting/material.h"
+#include "material.h"
 
 class hit_record {
   public:

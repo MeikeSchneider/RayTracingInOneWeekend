@@ -1,7 +1,7 @@
 #ifndef TRIANGLE_H
 #define TRIANGLE_H
 
-#include "../hittable_object.h"
+#include "hittable_object.h"
 
 class triangle : public hittable_object {
     public:

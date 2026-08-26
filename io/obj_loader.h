@@ -3,7 +3,7 @@
 
 #include <fstream>  // used for reading the file
 #include <sstream>  // used for unpacking each line into it's components
-#include "geometry/triangle_mesh.h"
+#include "../scene/hittable_obj/triangle_mesh.h"
 
 // helping structs: small data structures to store specific things
 
