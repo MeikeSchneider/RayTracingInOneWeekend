@@ -149,7 +149,6 @@ class camera : public simple_object {
                 
                 // get data from light source:
                 // l_light is incoming light from the light_source: intensity * color.
-                // This assumes, that all light will reach the intersection point
                 color l_light = l->get_intensity() * l->get_light_color();
                 // get the light position transformed into cam space
                 vec3 l_pos_in_cam_space = (vec4_to_vec3(invert(obj_to_world_matrix) * pos3_to_vec4(l->get_pos())));
@@ -189,9 +188,9 @@ class camera : public simple_object {
                 vec3 refl_dir = 2 * dot(unit_vector(rec.normal), unit_vector(light_source_dir)) * unit_vector(rec.normal) - unit_vector(light_source_dir);
                 // ns hardcoded, will be a material property later: rec.mat.get_specular_sharpness()
                 // ks hardcoded, will me material property later: rec.mat.get_specular_reflectivity() kd = 2/pi
-                
                 double specular_angle = std::max(0.0, dot(view_dir, unit_vector(refl_dir)));
                 color specular_light = (2.0/pi) * angle * pow(specular_angle, 10) * l_light;  // ks * dot(R, V)^ns * IL
+                
                 c = c + diffuse_light * rec.mat.get_diffuse_color() + specular_light; // later: specular * rec.mat.get_specular_color()
             }
             
