@@ -1,7 +1,7 @@
 #ifndef LIGHT_H
 #define LIGHT_H
 
-#include "simple_object.h"
+#include "../simple_object.h"
 
 class light : public simple_object {
     public:

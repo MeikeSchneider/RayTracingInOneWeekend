@@ -1,6 +1,6 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
-#include "color.h"
+#include "../color.h"
 
 class material {
     private:

@@ -2,8 +2,9 @@
 #define CAMERA_H
 
 #include "simple_object.h"
+#include "lighting/lights_in_scene.h"
 #include "objects_in_scene.h"
-#include "lights_in_scene.h"
+
 
 class camera : public simple_object {
     public:
@@ -140,34 +141,56 @@ class camera : public simple_object {
             // (is done to scale numbers from -1, 1 to 0, 1)
             // old way of shading: use surface normals, nothing else c = 0.5 * (rec.normal + color(1, 1, 1));
 
-            // Lambert's cosine law
+            // Phong
             color c(0, 0, 0);
+            // for every light source:
             for (const std::shared_ptr<light> l : lights.lights) {
+                
+                // get data from light source:
+                // l_light is incoming light from the light_source: intensity * color.
+                // This assumes, that all light will reach the intersection point
                 color l_light = l->get_intensity() * l->get_light_color();
-    
-                // rec.p = intersection point from hit_record
-                // calculate vector from intersection point to light source
-
-                // intersection_in_cam_space corresponds to p
+                // get the light position transformed into cam space
                 vec3 l_pos_in_cam_space = (vec4_to_vec3(invert(obj_to_world_matrix) * pos3_to_vec4(l->get_pos())));
+                // get the light source direction by calculating vector from interesction point p to light source
                 vec3 light_source_dir = l_pos_in_cam_space - rec.p;
+                
+                // secondary ray for shadows
+                
+                // make a ray going from the intersection point to the light source
+                ray p_to_light = ray(rec.p + (rec.normal * 10 * epsilon), light_source_dir);
+                // temporaray hit record 
+                hit_record temp;
+                // get the t of the light source = lenght of light_source_direction
+                double light_t = light_source_dir.length();
+                // check if there has been a hit between the intersection and the light source
+                if (world.hit(p_to_light, interval(0, light_t), obj_to_world_matrix, temp)) {
+                    // there has been a hit -> it's infront of the light source -> the light is occluded
+                    // std::clog << "something has been hit" << std::endl;
+                    l_light = color(0.5, 0.5, 0.5);
+                }
+
+                // diffuse light
                 double angle = dot(unit_vector(rec.normal), unit_vector(light_source_dir));
-                // diffuse light: skalar (repräsentiert die diffus reflektivität) * 
-                // skalar (repräsentiert Intensität des diffus reflektierten Lichts in Abhängigkeit vom Winkel der Oberflache des Objekts zu der Richtung des einfallenden Lichts) 
+                // angle could be negative, matches to the phong therm max(0, N°L)
+                angle = std::max(0.0, angle);
+                // diffuse light: skalar kd = (1.0/pi) (repräsentiert die Diffus reflektivität) * 
+                // skalar angle (represents intensity of diffuse reflected light.
+                // It's dependant on the angle of the surface of the object in relation to the direction of incoming light)
                 // * incoming light
-                // * wie sehr Oberflächen bestimmte Farben reflektieren
                 // kd * (N*L) * IL
-                // kd hardcoded, will me material property later: rec.mat.get_diffuse_reflectivity() kd = 1/pi
+                // kd = 1/pi hardcoded, will me material property later: rec.mat.get_diffuse_reflectivity()
                 color diffuse_light = (1.0/pi) * angle * l_light;
                 
-                
+                // specular light: uses dot product of view direction and reflection direction
                 vec3 view_dir = unit_vector(-r.direction());
-                vec3 dir = - unit_vector(rec.p - vec3(0, 0, 0));
                 // 2 * (l * n) * n - l
                 vec3 refl_dir = 2 * dot(unit_vector(rec.normal), unit_vector(light_source_dir)) * unit_vector(rec.normal) - unit_vector(light_source_dir);
                 // ns hardcoded, will be a material property later: rec.mat.get_specular_sharpness()
                 // ks hardcoded, will me material property later: rec.mat.get_specular_reflectivity() kd = 2/pi
-                color specular_light = (2.0/pi) * angle * pow(dot(view_dir, unit_vector(refl_dir)), 10) * l_light;  // ks * dot(R, V)^ns * IL
+                
+                double specular_angle = std::max(0.0, dot(view_dir, unit_vector(refl_dir)));
+                color specular_light = (2.0/pi) * angle * pow(specular_angle, 10) * l_light;  // ks * dot(R, V)^ns * IL
                 c = c + diffuse_light * rec.mat.get_diffuse_color() + specular_light; // later: specular * rec.mat.get_specular_color()
             }
             

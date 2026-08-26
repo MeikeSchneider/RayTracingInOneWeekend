@@ -34,7 +34,7 @@ class triangle_mesh : public hittable_object {
     // Uses the Möller-Trumbore-algorithm, expanded for meshes
     bool hit(const ray& r, interval ray_t, const matrix camera_to_world_matrix, hit_record& rec) const override {
         // epsilon defined to account for floating point errors
-        constexpr double epsilon = std::numeric_limits<double>::epsilon();
+        // constexpr double epsilon = std::numeric_limits<double>::epsilon();
 
         // variables for temporary hit record
         double temp_t = ray_t.max;

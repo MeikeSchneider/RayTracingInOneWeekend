@@ -2,7 +2,7 @@
 #include "camera.h"
 #include "simple_object.h" // included for testing
 #include "objects_in_scene.h" // included for "what objects are in the world"
-#include "lights_in_scene.h"
+#include "lighting/lights_in_scene.h"
 #include "geometry/sphere.h" // included for "floor"
 #include "geometry/triangle.h" // included for testing
 #include "geometry/triangle_mesh.h" // needed for meshes
@@ -192,7 +192,7 @@ int main() {
     objects_in_scene world;
     lights_in_scene lights;
 
-    light l(vec3(-10, 10, 0), color(1, 1, 1), 2.0);
+    light l(vec3(-10, 30, 0), color(1, 1, 1), 2.0);
     lights.add(make_shared<light>(l));
 
     /* old objects
@@ -278,7 +278,8 @@ int main() {
     // make a plane out of a triangle mesh to have a "floor"
     std::vector<vec3> v1 = {vec3(0, 0, 0), vec3(0, 0, -1), vec3(1, 0, 0), vec3(1, 0, -1)};
     std::vector<int> t1 = {0, 1, 2, 1, 2, 3};
-    triangle_mesh plane = triangle_mesh(v1, t1, vec3(-50, -22, -1), vec3(100, 0, 55));
+    // triangle_mesh plane = triangle_mesh(v1, t1, vec3(-50, -22, -1), vec3(100, 0, 55));
+    triangle_mesh plane = triangle_mesh(v1, t1, vec3(-50, -4, -1), vec3(100, 0, 55));
     world.add(make_shared<triangle_mesh>(plane));
     
     // add triangle mesh "fox"
@@ -286,8 +287,18 @@ int main() {
     loader.load("obj_files/fox.obj");
     material mat = material(color(1, 0.5, 0));
     triangle_mesh m = make_triangle_mesh(loader);
-    triangle_mesh n = triangle_mesh(m.get_vertices(), m.get_triangles(), vec3(0, -4, -5), vec3(1.5, 1.5, 1.5), 0, 1.1571, 0);
+    triangle_mesh n = triangle_mesh(m.get_vertices(), m.get_triangles(), vec3(0, -4, -5.5), vec3(1.5, 1.5, 1.5), 0, 1.1571, 0);
     n.set_material(mat);
+
+    // add ryuu
+    /*
+    obj_loader loader;
+    loader.load("obj_files/shiba2.obj");
+    material mat = material(color(1, 0.5, 0));
+    triangle_mesh m = make_triangle_mesh(loader);
+    triangle_mesh n = triangle_mesh(m.get_vertices(), m.get_triangles(), vec3(0, -4, -11), vec3(10, 10, 10), 0, 0, 0);
+    n.set_material(mat); */
+
     
     // get debugging info: how many vertices & triangles there are 
     // std::clog << "size of vertices = " << n.get_vertices().size() << std::endl;

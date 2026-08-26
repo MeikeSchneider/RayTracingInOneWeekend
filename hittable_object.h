@@ -2,7 +2,7 @@
 #define HITTABLE_OBJECT_H
 
 #include "simple_object.h"
-#include "material.h"
+#include "lighting/material.h"
 
 class hittable_object : public simple_object {
     using simple_object::simple_object;

@@ -16,6 +16,7 @@ using std::shared_ptr;
 // Constants
 // const double infinity = std::numeric_limits<double>::infinity(); // moved into interval.h due to include errors
 const double pi = 3.1415926535897932385;
+constexpr double epsilon = std::numeric_limits<double>::epsilon();
 
 // Utility Functions
 inline double degrees_to_radians(double degrees) {
