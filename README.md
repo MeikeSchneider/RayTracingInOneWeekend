@@ -1,7 +1,7 @@
-#Überlick: Ein in C++ implementierter Ray Tracer
+# Überlick: Ein in C++ implementierter Ray Tracer
 
-#Features:
-##Aktuell unterstützt der Ray Tracer:
+# Features:
+## Aktuell unterstützt der Ray Tracer:
 - Primäre rays
 - Schatten rays
 - Kugeln, Dreicke, Dreiecksnetze
@@ -11,16 +11,16 @@
 - Simple Materialien
 - PPM Ausgabe
 
-##Kompilieren:
+## Kompilieren:
 make compile
 
-##Ausführen:
+## Ausführen:
 ./main.exe > image.ppm
 
-##Command Line Optionen:
+## Command Line Optionen:
 noch keine
 
-#Projektstruktur:
+# Projektstruktur:
 images/
 math/
 io/
@@ -33,7 +33,7 @@ scene/
 tests/
 
 
-#Geplante Erweiterungen:
+# Geplante Erweiterungen:
 - Command line parsing
 - Statistiken erfassen
 - reproduzierbare Szene
