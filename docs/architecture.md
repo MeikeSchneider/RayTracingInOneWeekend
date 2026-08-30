@@ -19,7 +19,7 @@ Der obj_loader ließt .obj Dateien ein und setzt alle nötigen Variablen, sodass
 - **rtweekend.h:** häufig benutzte Mathe Dinge und Header, die überall zur Verfügung gestellt werden sollen, um unnötig viele includes zu vermeiden.
 
 ## Vererbung
-- **simple_object** enthält object_to_world_matrix. Diese repräsentiert immer die Transformation des Objects in den World Space. Außerdem Konstruktoren, die bei leerem Eintrag, translation, scale und rotation Einträgen jeweils die Matrix setzt um den gewünschten Effekt zu erzielen. simple_objects haben einen Positions getter und können mit move um einen gegebenen Wert bewegt und mit place an eine bestimmte Position plaziert werden. \n
+- **simple_object** enthält object_to_world_matrix. Diese repräsentiert immer die Transformation des Objects in den World Space. Außerdem Konstruktoren, die bei leerem Eintrag, translation, scale und rotation Einträgen jeweils die Matrix setzt um den gewünschten Effekt zu erzielen. simple_objects haben einen Positions getter und können mit move um einen gegebenen Wert bewegt und mit place an eine bestimmte Position plaziert werden.
 camera und light erben davon. 
 - **hittable_object** erbt von simple_object, hat also alle oben genannten features. Zusätzlich haben hittable_objects eine einfache hit Funktion, die beschreibt, wann ein Strahl das Objekt trifft. Jedes Object überschreibt die Funktion später, um Geometrie spezifische Schnittests abzubilden. Jedes hittable_object hat auch ein Material, extra Konstruktoren, die Materialien berücksichtigen bzw die Konstruktoren von simple_object darum erweitern und getter und setter für das Material. 
 triangle.h, triangle_mesh.h und sphere.h erben von dieser Klasse.
