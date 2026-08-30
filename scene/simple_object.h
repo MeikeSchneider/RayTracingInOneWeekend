@@ -2,8 +2,6 @@
 #define SIMPLE_OBJECT_H
 
 #include "../rtweekend.h"
-#include "camera.h"
-#include "../rendering/hit_record.h"
 
 class simple_object {
     /*

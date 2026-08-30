@@ -1,9 +1,12 @@
 #include <iostream>
+#include "../math/interval.h"
 
 void test_vec3();
 void test_vec4();
 void test_matrix();
 void test_color();
+void test_simple_obj();
+void test_sphere();
 
 int main() {
     std::cout << "Testing vec3...\n";
@@ -17,6 +20,12 @@ int main() {
 
     std::cout << "Testing color...\n";
     test_color();
+
+    std::cout << "Testing simple_obj...\n";
+    test_simple_obj();
+
+    std::cout << "Testing sphere...\n";
+    test_sphere();
 
 
     std::cout << "\nAll tests passed!\n";

@@ -1,6 +1,5 @@
 #include "rtweekend.h" // general main header file
 #include "scene/camera.h"
-#include "scene/simple_object.h" // included for testing
 #include "scene/objects_in_scene.h" // included for "what objects are in the world"
 #include "scene/lights_in_scene.h"
 #include "scene/hittable_obj/sphere.h" // included for "floor"
@@ -8,24 +7,6 @@
 #include "scene/hittable_obj/triangle_mesh.h" // needed for meshes
 #include "io/obj_loader.h" // to load in .obj files
 
-void test_simple_obj() {
-    // test the empty constructor
-    simple_object obj_1 = simple_object();
-    std::clog << "object_1 = " << obj_1.obj_to_world_matrix << std::endl;
-    // test constructor with scale and translation given
-    simple_object obj_2 = simple_object(vec3(1, 2, 3), vec3(2, 2, 2), 0, 0, 0);
-    std::clog << "object_2 = " << obj_2.obj_to_world_matrix << std::endl;
-    // test the move function
-    obj_1.move(vec3(3, 4, 5));
-    std::clog << "object_1 = " << obj_1.obj_to_world_matrix << std::endl;
-    obj_2.move(vec3(-1, -2, -3));
-    std::clog << "object_2 = " << obj_2.obj_to_world_matrix << std::endl;
-    // test the place function
-    obj_1.place(vec3(3, 4, 5));
-    std::clog << "object_1 = " << obj_1.obj_to_world_matrix << std::endl;
-    obj_2.place(vec3(-1, -2, -3));
-    std::clog << "object_2 = " << obj_2.obj_to_world_matrix << std::endl;
-}
 
 void test_sphere() {
     // test constructors

@@ -5,6 +5,7 @@
 #include "lights_in_scene.h"
 #include "objects_in_scene.h"
 #include "../io/image_writer.h"
+#include "../rendering/hit_record.h"
 
 
 class camera : public simple_object {

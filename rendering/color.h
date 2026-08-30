@@ -3,7 +3,6 @@
 
 #include "../math/vec3.h"
 #include "vector"
-#include "../math/interval.h"
 
 // using color = vec3;  // color is just a vec3 with rgb values
 

@@ -3,6 +3,7 @@
 
 #include "../../scene/simple_object.h"
 #include "../../rendering/material.h"
+#include "../../rendering/hit_record.h"
 
 class hittable_object : public simple_object {
     using simple_object::simple_object;
