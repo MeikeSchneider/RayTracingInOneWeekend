@@ -1,3 +1,5 @@
+#include <fstream>
+
 #include "rtweekend.h" // general main header file
 #include "scene/camera.h"
 #include "scene/objects_in_scene.h" // included for "what objects are in the world"
@@ -7,15 +9,69 @@
 #include "io/obj_loader.h" // to load in .obj files
 #include "io/image_writer.h"
 
-int main() {
-    // TODO comand line parsing logic (if (--ppm etc))
+int main(int argc, char* argv[]) {
     objects_in_scene world;
     lights_in_scene lights;
     image_data image;
 
+    // command line parsing logic
+    if (argc != 2){
+        std::cerr << "Invalid input. Usage: ./main.exe [--ppm|--png|--statistics|--debug|--benchmark]" << std::endl;
+        return 1;
+    }
 
+    // building the scene
+    // lights
     light l(vec3(-10, 30, 0), color(1, 1, 1), 2.0);
     lights.add(make_shared<light>(l));
+
+    // make a plane out of a triangle mesh to have a "floor"
+    std::vector<vec3> v1 = {vec3(0, 0, 0), vec3(0, 0, -1), vec3(1, 0, 0), vec3(1, 0, -1)};
+    std::vector<int> t1 = {0, 1, 2, 1, 2, 3};
+    triangle_mesh plane = triangle_mesh(v1, t1, vec3(-50, -4, -1), vec3(100, 0, 55));
+    world.add(make_shared<triangle_mesh>(plane));
+
+    // add triangle mesh "fox"
+    obj_loader loader;
+    loader.load("obj_files/fox.obj");
+    material mat = material(color(1, 0.5, 0));
+    triangle_mesh m = make_triangle_mesh(loader);
+    triangle_mesh n = triangle_mesh(m.get_vertices(), m.get_triangles(), vec3(0, -4, -5.5), vec3(1.5, 1.5, 1.5), 0, 1.1571, 0);
+    n.set_material(mat);
+    world.add(make_shared<triangle_mesh>(n));
+
+    // camera
+    camera cam;
+    cam.aspect_ratio = 16.0 / 9.0;  // image width to image height is 16:9 
+    cam.image_width  = 400;
+    cam.samples_per_pixel = 1;  // set this to 1 for testing! -> one ray per pixel
+    // cam.samples_per_pixel = 100;  // anti-aliasing: 100 rays per pixel
+    
+    // depending on the selected mode, output different things
+    std::string mode = argv[1];
+    if (mode == "--ppm") {
+        // render image as ppm 
+        std::clog << "Rendering image as ppm" << std::endl;
+        cam.render(world, lights, image);
+        std::ofstream output_file("image.ppm");
+        draw_ppm(output_file, image);
+        output_file.close();
+    } else if (mode == "--png") {
+        // render image as png
+        std::clog << "Rendering image as png" << std::endl;
+    } else if (mode == "--statistics") {
+        std::clog << "Statistics mode selected" << std::endl;
+    } else if (mode == "--debug") {
+        std::cout << "Debug mode selected" << std::endl;
+    } else if (mode == "--benchmark") {
+        std::cout << "Benchmark mode selected" << std::endl;
+    } else {
+        std::cerr << "Unknown option: " << mode << std::endl;
+        return 1;
+    }
+    return 0;
+
+    
 
     /* old objects
     Here are all the old things that were added to the world for testing/ different obj models
@@ -95,33 +151,16 @@ int main() {
     triangle_mesh n = triangle_mesh(m.get_vertices(), m.get_triangles(), vec3(0, -4, -16), vec3(20, 20, 20), 0, 1.57, 0);
     world.add(make_shared<triangle_mesh>(n));
 
-    */
-
-    // make a plane out of a triangle mesh to have a "floor"
-    std::vector<vec3> v1 = {vec3(0, 0, 0), vec3(0, 0, -1), vec3(1, 0, 0), vec3(1, 0, -1)};
-    std::vector<int> t1 = {0, 1, 2, 1, 2, 3};
-    // triangle_mesh plane = triangle_mesh(v1, t1, vec3(-50, -22, -1), vec3(100, 0, 55));
-    triangle_mesh plane = triangle_mesh(v1, t1, vec3(-50, -4, -1), vec3(100, 0, 55));
-    world.add(make_shared<triangle_mesh>(plane));
-    
-    // add triangle mesh "fox"
-    obj_loader loader;
-    loader.load("obj_files/fox.obj");
-    material mat = material(color(1, 0.5, 0));
-    triangle_mesh m = make_triangle_mesh(loader);
-    triangle_mesh n = triangle_mesh(m.get_vertices(), m.get_triangles(), vec3(0, -4, -5.5), vec3(1.5, 1.5, 1.5), 0, 1.1571, 0);
-    n.set_material(mat);
-
-    // add ryuu
-    /*
+    // RYUU
     obj_loader loader;
     loader.load("obj_files/shiba2.obj");
     material mat = material(color(1, 0.5, 0));
     triangle_mesh m = make_triangle_mesh(loader);
     triangle_mesh n = triangle_mesh(m.get_vertices(), m.get_triangles(), vec3(0, -4, -11), vec3(10, 10, 10), 0, 0, 0);
-    n.set_material(mat); */
+    n.set_material(mat);
 
-    
+    */
+
     // get debugging info: how many vertices & triangles there are 
     // std::clog << "size of vertices = " << n.get_vertices().size() << std::endl;
     // std::clog << "size of triangles = " << n.get_triangles().size() / 3 << std::endl;
@@ -141,17 +180,4 @@ int main() {
     } 
     // std::clog << "min_x, min_y, min_z = " << min_x << ", " << min_y << ", " << min_z << std::endl;
     // std::clog << "max_x, max_y, max_z = " << max_x << ", " << max_y << ", " << max_z << std::endl;
-    
-    // add object to world
-    world.add(make_shared<triangle_mesh>(n));
-    
-    camera cam; // create camera object
-
-    cam.aspect_ratio = 16.0 / 9.0;  // image width to image height is 16:9 
-    cam.image_width  = 400;
-    cam.samples_per_pixel = 1;  // // set this to 1 for testing!
-    // cam.samples_per_pixel = 100;  // normal value, send 100 rays per pixel into scene, used for anti-aliasing
-
-    cam.render(world, lights, image);
-    draw_ppm(std::cout, image);
 }
