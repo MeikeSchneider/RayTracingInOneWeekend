@@ -1,0 +1,22 @@
+idea for a makefile, unclear if it works. can be used, if we want to link stuff
+CPP_FILES := $(wildcard *.cpp) \
+             $(wildcard math/*.cpp) \
+             $(wildcard rendering/*.cpp) \
+             $(wildcard scene/*.cpp) \
+             $(wildcard scene/hittable_obj/*.cpp)
+
+OBJ_FILES := $(CPP_FILES:.cpp=.o)
+
+compile: $(OBJ_FILES)
+	g++ -o main.exe $(OBJ_FILES)
+
+%.o: %.cpp
+	g++ -c $< -o $@
+
+TEST_FILES := $(wildcard tests/*.cpp)
+test:
+	g++ $(TEST_FILES) -o test.exe
+	./test.exe
+
+clean:
+	rm -f $(OBJ_FILES) *.exe

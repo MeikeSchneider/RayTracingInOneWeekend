@@ -7,6 +7,7 @@ void test_matrix();
 void test_color();
 void test_simple_obj();
 void test_sphere();
+void test_camera();
 
 int main() {
     std::cout << "Testing vec3...\n";
@@ -26,6 +27,9 @@ int main() {
 
     std::cout << "Testing sphere...\n";
     test_sphere();
+
+    std::cout << "Testing camera...\n";
+    test_camera();
 
 
     std::cout << "\nAll tests passed!\n";
