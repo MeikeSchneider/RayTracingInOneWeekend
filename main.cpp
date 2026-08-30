@@ -5,11 +5,14 @@
 #include "scene/hittable_obj/sphere.h"
 #include "scene/hittable_obj/triangle.h" // included for individual testing
 #include "io/obj_loader.h" // to load in .obj files
+#include "io/image_writer.h"
 
 int main() {
     // TODO comand line parsing logic (if (--ppm etc))
     objects_in_scene world;
     lights_in_scene lights;
+    image_data image;
+
 
     light l(vec3(-10, 30, 0), color(1, 1, 1), 2.0);
     lights.add(make_shared<light>(l));
@@ -149,11 +152,6 @@ int main() {
     cam.samples_per_pixel = 1;  // // set this to 1 for testing!
     // cam.samples_per_pixel = 100;  // normal value, send 100 rays per pixel into scene, used for anti-aliasing
 
-    // call test functions here
-    // test_triangle();
-    // test_triangle_mesh();
-    // test_mesh_hit();
-    // test_obj_loader();
-
-    cam.render(world, lights);
+    cam.render(world, lights, image);
+    draw_ppm(std::cout, image);
 }

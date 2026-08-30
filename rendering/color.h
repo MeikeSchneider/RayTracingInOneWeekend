@@ -4,8 +4,6 @@
 #include "../math/vec3.h"
 #include "vector"
 
-// using color = vec3;  // color is just a vec3 with rgb values
-
 // color "class" with variables and a basic constructor
 // done to prevent that vec3 can be used for the file conversion calculations
 struct color {
@@ -13,9 +11,22 @@ struct color {
     double g;
     double b;
 
-    // ray(const point3& origin, const vec3& direction) : orig(origin), dir(direction) {}
     color() : r(0), g(0), b(0) {};
     color(double r, double g, double b) : r(r), g(g), b(b) {}
+
+    /*
+    have different functions that convert the raw data
+    (red/green/blue components each have a range from 0.0 to 1.0)
+    into whatever format is needed for a certain image format
+    */
+    
+};
+
+class image_data {
+    public:
+    std::vector<color> color_container;
+    int width;
+    int height;
 };
 
 // explain to io stream how to deal with colors

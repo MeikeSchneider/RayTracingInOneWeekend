@@ -40,34 +40,27 @@ class camera : public simple_object {
         obj_to_world_matrix = matrix::Translation(position) * rotation;
     }
 
-    void render(objects_in_scene& world, lights_in_scene& lights) {
-        // change this function if using a different file format. 
-        // TODO add the container where the color info is supposed to be saved render(world, vector& color_container)
+    void render(objects_in_scene& world, lights_in_scene& lights, image_data& container) {
         initialize();
-        /*  P3
-            400 225
-            255  ...   */
-        // all of this can stay the same
-        std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
+        container.height = image_height;
+        container.width = image_width;
+        // multi_threading: all of this can stay the same
         for (int j = 0; j < image_height; j++) {
             // for every remaining line of the image, print remaining line number into the terminal
             std::clog << "\rScanlines remaining: " << (image_height - j) << ' ' << std::flush;
             for (int i = 0; i < image_width; i++) {
-                // for multi-threading: everything starting here until write_color (including)
-                // would be a job, moved into seperate function
+                // multi-threading: everything starting here until write_color (including)
+                // multi-threading:would be a job, moved into seperate function
                 color pixel_color(0, 0, 0); // possible multi threading here
                 for (int sample = 0; sample < samples_per_pixel; sample++) {
                     ray r = get_ray(i, j);
-                    // std::clog << "ray origin, direction = " << r.origin() << ", " << r.direction() << std::endl;
-                    // pixel_color += ray_color(r, world);
                     pixel_color = pixel_color + ray_color(r, world, lights);
                 }
-                // TODO this needs to change: write the data into color_container instead. 
-                // actual image drawing is handled in main (or output.h, if that exists)
-                write_color(std::cout, pixel_samples_scale * pixel_color);
+                // fill color container with raw image data.
+                container.color_container.push_back(pixel_samples_scale * pixel_color);
             }
         }
-        // this is fine
+        // multi-threading:: this is fine
         // after the whole image is rendered, print "Done" into terminal
         std::clog << "\rDone.                 \n";
     }
