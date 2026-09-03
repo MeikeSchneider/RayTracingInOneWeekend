@@ -47,16 +47,10 @@ inline std::ostream& operator<<(std::ostream& os, const std::vector<face_vertex>
     return os;
 }
 
-// vertices.size() gives amount of triangles, triangles.size() gives number of vertices, so extra function needed
-// when reading in triangles: triangles can be added with vertices.push_back(); 
-// indices for triangles have to be calculated 
-// vertices and triangles lists can be cleared using vertices.clear(); and triangles.clear();
-
+// class responsible for loading in .obj files, saving all of the information
+// and generating a triangle mesh out of it.
+// Later: also providing info for lighting, textures etc.
 class obj_loader {
-    // class responsible for loading in .obj files, saving all of the information
-    // and generating a triangle mesh out of it.
-    // Later: also providing info for lighting, textures etc.
-
     private:
     std::vector<vec3> vertices_lst; // list of 3d coordinates of the vertices, specified by v
     std::vector<vec3> normals_lst; // list of 3d coordinates of normal vectors, specified by vn
@@ -69,6 +63,7 @@ class obj_loader {
     const std::vector<vec3>& get_normals_lst() const { return normals_lst; }
     const std::vector<tex_coord>& get_texCoords_lst() const { return texCoords_lst; }
     const std::vector<face_vertex>& get_faces_lst() const { return faces_lst; }
+
     // function to read a file line by line using ifstream
     // fills vertices_lst, normals_lst, texCoords_lst, faces_lst.
     void load(const std::string& filename) {
@@ -153,19 +148,6 @@ class obj_loader {
             } // end of "f" case
             else {continue; }
         } // end of big while loop
-        // std::clog << "vertices_lst = " << vertices_lst << std::endl; // vertices_lst successfully set
-        // std::clog << "normals_lst = " << normals_lst << std::endl;  // normals_lst successfully set
-        // std::clog << "texCoords_lst = " << texCoords_lst << std::endl;
-        // std::clog << "faces_lst = " << faces_lst << std::endl;
-
-        /*
-        // how to use: texCoords_lst[0].u, texCoords_lst[0].v
-        std::vector<tex_coord> texCoords_lst;
-
-        // list of faces. Each face can have the three aspects defined in face_vertex
-        std::vector<face_vertex> faces_lst;
-        */
-        
         
         // close file after reading it
         input_file.close();
@@ -175,18 +157,75 @@ class obj_loader {
 // function for generating a triangle mesh out of a .obj file
 triangle_mesh make_triangle_mesh(const obj_loader& obj) {
     std::vector<vec3> vertices = obj.get_vertices_lst();
-    // std::clog << "vertices = " << vertices << std::endl;
     std::vector<int> triangles;
+    std::vector<vec3> normals = obj.get_normals_lst();
+    std::vector<int> normal_indices;
 
     for (const face_vertex& current_vertex : obj.get_faces_lst()) {
-        // std::clog << "faces = " << current_vertex << std::endl;
         triangles.push_back(current_vertex.vertex_index - 1);
+        if (current_vertex.normal_index != -1) { normal_indices.push_back(current_vertex.normal_index -1); }
     }
     if (triangles.size() % 3 != 0) { std::cerr << "File has stuff that's not triangles!" << std::endl; }
-    // std::clog << "triangles = " << triangles << std::endl;
-    triangle_mesh res = triangle_mesh(vertices, triangles);
+    
+    if (!normals.empty() && !normal_indices.empty()) {
+        return triangle_mesh(vertices, triangles, normals, normal_indices);
+    }
+    
+    return triangle_mesh(vertices, triangles);
+}
 
-    return res;
+// same function, but with translation input
+triangle_mesh make_triangle_mesh(const obj_loader& obj, vec3 translation) {
+    std::vector<vec3> vertices = obj.get_vertices_lst();
+    std::vector<int> triangles;
+    std::vector<vec3> normals = obj.get_normals_lst();
+    std::vector<int> normal_indices;
+
+    for (const face_vertex& current_vertex : obj.get_faces_lst()) {
+        triangles.push_back(current_vertex.vertex_index - 1);
+        if (current_vertex.normal_index != -1) { normal_indices.push_back(current_vertex.normal_index -1); }
+    }
+    if (triangles.size() % 3 != 0) { std::cerr << "File has stuff that's not triangles!" << std::endl; }
+    if (!normals.empty() && !normal_indices.empty()) {
+        return triangle_mesh(vertices, triangles, normals, normal_indices, translation);
+    }
+    return triangle_mesh(vertices, triangles, translation);
+}
+
+// same function, but with translation and scale input
+triangle_mesh make_triangle_mesh(const obj_loader& obj, vec3 translation, vec3 scale) {
+    std::vector<vec3> vertices = obj.get_vertices_lst();
+    std::vector<int> triangles;
+    std::vector<vec3> normals = obj.get_normals_lst();
+    std::vector<int> normal_indices;
+
+    for (const face_vertex& current_vertex : obj.get_faces_lst()) {
+        triangles.push_back(current_vertex.vertex_index - 1);
+        if (current_vertex.normal_index != -1) { normal_indices.push_back(current_vertex.normal_index -1); }
+    }
+    if (triangles.size() % 3 != 0) { std::cerr << "File has stuff that's not triangles!" << std::endl; }
+    if (!normals.empty() && !normal_indices.empty()) {
+        return triangle_mesh(vertices, triangles, normals, normal_indices, translation, scale);
+    }
+    return triangle_mesh(vertices, triangles, translation, scale);
+}
+
+// same function, but with translation, scale, rotation input
+triangle_mesh make_triangle_mesh(const obj_loader& obj, vec3 translation, vec3 scale, float xRot, float yRot, float zRot) {
+    std::vector<vec3> vertices = obj.get_vertices_lst();
+    std::vector<int> triangles;
+    std::vector<vec3> normals = obj.get_normals_lst();
+    std::vector<int> normal_indices;
+
+    for (const face_vertex& current_vertex : obj.get_faces_lst()) {
+        triangles.push_back(current_vertex.vertex_index - 1);
+        if (current_vertex.normal_index != -1) { normal_indices.push_back(current_vertex.normal_index -1); }
+    }
+    if (triangles.size() % 3 != 0) { std::cerr << "File has stuff that's not triangles!" << std::endl; }
+    if (!normals.empty() && !normal_indices.empty()) {
+        return triangle_mesh(vertices, triangles, normals, normal_indices, translation, scale, xRot, yRot, zRot);
+    }
+    return triangle_mesh(vertices, triangles, translation, scale, xRot, yRot, zRot);
 }
 
 #endif

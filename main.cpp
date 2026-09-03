@@ -35,10 +35,9 @@ int main(int argc, char* argv[]) {
     obj_loader loader;
     loader.load("obj_files/fox.obj");
     material mat = material(color(1, 0.5, 0));
-    triangle_mesh m = make_triangle_mesh(loader);
-    triangle_mesh n = triangle_mesh(m.get_vertices(), m.get_triangles(), vec3(0, -4, -5.5), vec3(1.5, 1.5, 1.5), 0, 1.1571, 0);
-    n.set_material(mat);
-    world.add(make_shared<triangle_mesh>(n));
+    triangle_mesh m = make_triangle_mesh(loader, vec3(0, -4, -5.5), vec3(1.5, 1.5, 1.5), 0, 1.1571, 0);
+    m.set_material(mat);
+    world.add(make_shared<triangle_mesh>(m));
 
     // camera
     camera cam;
@@ -162,13 +161,13 @@ int main(int argc, char* argv[]) {
     */
 
     // get debugging info: how many vertices & triangles there are 
-    // std::clog << "size of vertices = " << n.get_vertices().size() << std::endl;
-    // std::clog << "size of triangles = " << n.get_triangles().size() / 3 << std::endl;
+    // std::clog << "size of vertices = " << m.get_vertices().size() << std::endl;
+    // std::clog << "size of triangles = " << m.get_triangles().size() / 3 << std::endl;
     
     // get debugging info: what are the mins and max -> how to move object to fully see it.
     double min_x, min_y, min_z = 100;
     double max_x, max_y, max_z = 0;
-    std::vector<vec3> vertices = n.get_vertices();
+    std::vector<vec3> vertices = m.get_vertices();
     for (int i = 0; i < vertices.size(); i++) {
         if (vertices[i].x() < min_x) { min_x = vertices[i].x(); }
         if (vertices[i].y() < min_y) { min_y = vertices[i].y(); }

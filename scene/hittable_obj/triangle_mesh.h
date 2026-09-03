@@ -11,6 +11,10 @@ class triangle_mesh : public hittable_object {
     const std::vector<vec3>& get_vertices() const { return vertices; }
     // getters for private variable triangles
     const std::vector<int>& get_triangles() const { return triangles; }
+    // getter for optional variable normals
+    const std::vector<vec3>& get_normals() const { return normals; }
+    // getter for optional variable normal_indices
+    const std::vector<int>& get_normal_indices() const { return normal_indices; }
     
     // basic constructor that sets only vertices and triangles
     triangle_mesh(std::vector<vec3> vertex_list, std::vector<int> triangle_list
@@ -29,26 +33,46 @@ class triangle_mesh : public hittable_object {
         float xRotation, float yRotation, float zRotation
         ) : hittable_object(translation, scale, xRotation, yRotation, zRotation
         ), vertices(vertex_list), triangles(triangle_list) {}
+    
+    // constructors that include optional variables for normal vectors read from obj files:
+    // constructor that sets vertices, triangles, normals and normals_indices
+    triangle_mesh(std::vector<vec3> vertex_list, std::vector<int> triangle_list, std::vector<vec3> normals_list, std::vector<int> normal_indices_list
+        ) : hittable_object(), vertices(vertex_list), triangles(triangle_list), normals(normals_list), normal_indices(normal_indices_list) {}
+
+
+    // constructor that sets vertices, triangles, normals, normals_indices, translation
+    triangle_mesh(std::vector<vec3> vertex_list, std::vector<int> triangle_list, std::vector<vec3> normals_list, std::vector<int> normal_indices_list, vec3 translation
+        ) : hittable_object(translation), vertices(vertex_list), triangles(triangle_list), normals(normals_list), normal_indices(normal_indices_list) {}
+
+    // constructor that sets vertices, triangles, normals, normals_indices, translation, scale
+    triangle_mesh(std::vector<vec3> vertex_list, std::vector<int> triangle_list, std::vector<vec3> normals_list,
+        std::vector<int> normal_indices_list, vec3 translation, vec3 scale
+        ) : hittable_object(translation, scale), vertices(vertex_list), triangles(triangle_list), normals(normals_list), 
+        normal_indices(normal_indices_list) {}   
+    
+    // constructor that sets vertices, triangles, normals, normals_indices, translation, scale, rotation
+    triangle_mesh(std::vector<vec3> vertex_list, std::vector<int> triangle_list, std::vector<vec3> normals_list,
+        std::vector<int> normal_indices_list, vec3 translation, vec3 scale, float xRotation, float yRotation, float zRotation
+        ) : hittable_object(translation, scale, xRotation, yRotation, zRotation), vertices(vertex_list), 
+        triangles(triangle_list), normals(normals_list), normal_indices(normal_indices_list) {}
 
     // hit function: test for all triangles of the mesh if the ray hits it
     // Uses the Möller-Trumbore-algorithm, expanded for meshes
     bool hit(const ray& r, interval ray_t, const matrix camera_to_world_matrix, hit_record& rec) const override {
-        // epsilon defined to account for floating point errors
-        // constexpr double epsilon = std::numeric_limits<double>::epsilon();
-
         // variables for temporary hit record
         double temp_t = ray_t.max;
         point3 temp_p;
         vec3 temp_outward_normal;
-        
-        // check that the size of triangles is divisible by 3
-        // if (triangles.size() % 3 != 0) { return false; }
         
         // iterate through triangles in steps of size 3. Take the indices and look up the coordinates in vertices
         for (int i = 0; i < triangles.size(); i=i+3) {
             vec3 vertex_a = vertices[triangles[i]];
             vec3 vertex_b = vertices[triangles[i+1]];
             vec3 vertex_c = vertices[triangles[i+2]];
+            
+            // if surface normals have been read from an obj:
+            bool has_normals = !normals.empty() && normal_indices.size() == triangles.size();
+
 
             matrix obj_to_cam_matrix = invert(camera_to_world_matrix) * obj_to_world_matrix;
             // transform the triangle vertices into camera space
@@ -92,21 +116,31 @@ class triangle_mesh : public hittable_object {
 
             // calculate intersection point by putting t into the def for a ray = (ray.origin + t * ray.direction)
             vec3 intersection = r.origin() + t * r.direction();
-            // std::clog << "intersection = " << intersection << std::endl;
             
             // set temporary hit record if a smaller t > 0 is found -> an intersection closer to the camera
             if (t < temp_t && t > epsilon) {
-                // std::clog << "wrote into temp hit record" << std::endl;
                 temp_t = t; // t from ray equation, needed for insection calculation
                 temp_p = intersection; // actual intersection point
-                temp_outward_normal = unit_vector(triangle_plane_normal);
+
+                if (has_normals) {
+                    vec3 normal_a = normals[normal_indices[i]];
+                    vec3 normal_b = normals[normal_indices[i + 1]];
+                    vec3 normal_c = normals[normal_indices[i + 2]];
+                    // transform the optional normals into camera space
+                    vec3 normal_a_in_cam_space = vec4_to_vec3(obj_to_cam_matrix * dir3_to_vec4(normal_a));
+                    vec3 normal_b_in_cam_space = vec4_to_vec3(obj_to_cam_matrix * dir3_to_vec4(normal_b));
+                    vec3 normal_c_in_cam_space = vec4_to_vec3(obj_to_cam_matrix * dir3_to_vec4(normal_c));
+                    // w needed for interpolated normals from obj file
+                    double w = 1.0 - u - v;
+                    vec3 interpolated_normal = w * normal_a_in_cam_space + u * normal_b_in_cam_space + v * normal_c_in_cam_space;
+                    temp_outward_normal = unit_vector(interpolated_normal);
+                } else { temp_outward_normal = unit_vector(triangle_plane_normal); }
             }
         } // end of big for loop
         
         // set final hit record if something has been written in the temporary hit record
-        // std::clog << "temp_t = " << temp_t << std::endl;
+
         if (temp_t < ray_t.max) {
-            // std::clog << "wrote into final hit record" << std::endl;
             rec.t = temp_t;
             rec.p = temp_p;
             rec.set_face_normal(r, temp_outward_normal);
@@ -121,6 +155,9 @@ class triangle_mesh : public hittable_object {
     std::vector<vec3> vertices;
     // list of triangles that stores the indices of where in vertices the edges are
     std::vector<int> triangles;
+    // optional lists for normal vectors read from obj files
+    std::vector<vec3> normals;
+    std::vector<int> normal_indices;
 
 };
 

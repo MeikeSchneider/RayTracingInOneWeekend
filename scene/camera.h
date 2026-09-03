@@ -17,25 +17,23 @@ class camera : public simple_object {
     // basic constructor
     camera() : simple_object() {}
 
+    // constructor with pos given
     camera(vec3 position) {
-        // constructor with pos given
         // vec3 position -> vec3 translation 
         // (1, 1, 1) -> vec3 scale
         // constructor with translation and scale given
         vec3 scale = vec3(1, 1, 1);
         vec3 translation = position;
-        // DONE TODO
         obj_to_world_matrix = matrix::Translation(translation) * matrix::Scale(scale);
     }
 
+    // constructor with just rotation given
     camera(float xRotation, float yRotation, float zRotation) {
-        // constructor with just rotation given
         obj_to_world_matrix = matrix::ZRotation(zRotation) * (matrix::YRotation(yRotation) * matrix::XRotation(xRotation));
     }
 
+    // constructor with position and rotation given
     camera(vec3 position, float xRotation, float yRotation, float zRotation) {
-        // constructor with position and rotation given
-        // DONE TODO
         matrix rotation = matrix::ZRotation(zRotation) * (matrix::YRotation(yRotation) * matrix::XRotation(xRotation));
         obj_to_world_matrix = matrix::Translation(position) * rotation;
     }
@@ -103,10 +101,9 @@ class camera : public simple_object {
         pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
     }
 
+    // Construct a camera ray from the camera point and directed at randomly sample point around the pixel location i, j.
     ray get_ray(int i, int j) const {
-        /* Construct a camera ray originating from the origin and directed at randomly sampled
-        point around the pixel location i, j. */
-        // something with anti-aliasing
+        // anti-aliasing
         auto offset = sample_square();
         auto pixel_sample = pixel00_loc
                           + ((i + offset.x()) * pixel_delta_u)
@@ -117,10 +114,8 @@ class camera : public simple_object {
         return ray(ray_origin, ray_direction);
     }
 
-    vec3 sample_square() const {
-        // Returns the vector to a random point in the [-.5,-.5]-[+.5,+.5] unit square.
-        return vec3(random_double() - 0.5, random_double() - 0.5, 0);
-    }
+    // Returns the vector to a random point in the [-.5,-.5]-[+.5,+.5] unit square.
+    vec3 sample_square() const { return vec3(random_double() - 0.5, random_double() - 0.5, 0); }
     
     // takes a ray and the lists of objects and light sources in the world
     // checks if the ray hits an object and returns a color for the pixel
@@ -134,13 +129,14 @@ class camera : public simple_object {
         if (world.hit(r, interval(0, infinity), obj_to_world_matrix, rec)) {
             // takes the normal vector from hit record, adds (1, 1, 1), multiplies by 0.5
             // (is done to scale numbers from -1, 1 to 0, 1)
-            // old way of shading: use surface normals, nothing else c = 0.5 * (rec.normal + color(1, 1, 1));
+            // old way of shading: use surface normals, nothing else
+            // c = 0.5 * (rec.normal + color(1, 1, 1));
 
             // Phong
             color c(0, 0, 0);
             // for every light source:
             for (const std::shared_ptr<light> l : lights.lights) {
-                
+
                 // get data from light source:
                 // l_light is incoming light from the light_source: intensity * color.
                 color l_light = l->get_intensity() * l->get_light_color();
@@ -160,30 +156,31 @@ class camera : public simple_object {
                 // check if there has been a hit between the intersection and the light source
                 if (world.hit(p_to_light, interval(0, light_t), obj_to_world_matrix, temp)) {
                     // there has been a hit -> it's infront of the light source -> the light is occluded
-                    // std::clog << "something has been hit" << std::endl;
                     l_light = color(0.5, 0.5, 0.5);
                 }
 
-                // diffuse light
-                double angle = dot(unit_vector(rec.normal), unit_vector(light_source_dir));
-                // angle could be negative, matches to the phong therm max(0, N°L)
-                angle = std::max(0.0, angle);
                 // diffuse light: skalar kd = (1.0/pi) (repräsentiert die Diffus reflektivität) * 
                 // skalar angle (represents intensity of diffuse reflected light.
                 // It's dependant on the angle of the surface of the object in relation to the direction of incoming light)
-                // * incoming light
-                // kd * (N*L) * IL
-                // kd = 1/pi hardcoded, will me material property later: rec.mat.get_diffuse_reflectivity()
-                color diffuse_light = (1.0/pi) * angle * l_light;
+                // * incoming light -> kd * (N*L) * IL
+                double angle = dot(unit_vector(rec.normal), unit_vector(light_source_dir));
+                double kd = rec.mat.get_diffuse_reflectivity();
+                // angle could be negative, matches to the phong therm max(0, N°L)
+                angle = std::max(0.0, angle);
+                color diffuse_light = kd * angle * l_light;
                 
                 // specular light: uses dot product of view direction and reflection direction
                 vec3 view_dir = unit_vector(-r.direction());
                 // 2 * (l * n) * n - l
                 vec3 refl_dir = 2 * dot(unit_vector(rec.normal), unit_vector(light_source_dir)) * unit_vector(rec.normal) - unit_vector(light_source_dir);
-                // ns hardcoded, will be a material property later: rec.mat.get_specular_sharpness()
-                // ks hardcoded, will me material property later: rec.mat.get_specular_reflectivity() kd = 2/pi
+                
+                // ns = specular sharpness reflection parameter. Value could be 100 for shiny surfaces and 1 or less for dull surfaces.
+                // ks hardcoded, will me material property later: rec.mat.get_specular_reflectivity() ks = 2/pi (values between 0 and 1)
                 double specular_angle = std::max(0.0, dot(view_dir, unit_vector(refl_dir)));
-                color specular_light = (2.0/pi) * angle * pow(specular_angle, 10) * l_light;  // ks * dot(R, V)^ns * IL
+                double ns = rec.mat.get_specular_sharpness();
+                double ks = rec.mat.get_specular_reflectivity();
+                // color specular_light = (2.0/pi) * angle * pow(specular_angle, 10) * l_light;  // ks * dot(R, V)^ns * IL
+                color specular_light = ks * angle * pow(specular_angle, ns) * l_light;  // ks * dot(R, V)^ns * IL
                 
                 c = c + diffuse_light * rec.mat.get_diffuse_color() + specular_light; // later: specular * rec.mat.get_specular_color()
             }
